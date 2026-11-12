@@ -4,11 +4,11 @@ import { books, type Book } from './catalog'
 import { track } from './analytics'
 import { ShareSheet } from './ShareSheet'
 
-// dashlint-demo pattern 11: the "Checkout funnel health" alert targets series index 2 (the
-// completion step). A formula series was later inserted at index 1, shifting every series after
-// it along by one; the alert still reads index 2, which is now the formula, not the completion
-// step it was built to watch. No app code produces or fixes this: the bookkeeping lives entirely
-// in the dashboard's alert config.
+// dashlint-demo pattern 11: the "Checkout funnel health" alert was built against series index 2
+// (the third series). A formula was later added to the insight; once an insight has formulas,
+// PostHog's series_index counts formula results, not series, and there is only one formula, so
+// index 2 now points at nothing. No app code produces or fixes this: the bookkeeping lives
+// entirely in the dashboard's alert config.
 
 export default function App() {
   const [cart, setCart] = useState<Book[]>([])

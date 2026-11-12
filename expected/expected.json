@@ -1,0 +1,62 @@
+{
+  "schema": "dashlint-demo.expected/1",
+  "written": "2026-11-13",
+  "about": "The verdict dashlint should give every tile and alert of the demo PostHog project, worked out by hand from the verdict rules and the seeded patterns before dashlint was ever run on the demo. A run that disagrees is a bug in dashlint or a documented decision, never an edit to this file.",
+  "assumes": {
+    "sources": [
+      { "name": "web", "path": "web", "platform": "web" },
+      { "name": "mobile", "path": "mobile", "platform": ["ios", "android"] }
+    ],
+    "observedDays": 30,
+    "notes": [
+      "One platform means exactly one platform id: a tile fed only by the mobile app (ios and android) is live, a tile fed only by the web app is one platform.",
+      "All-events nodes and events with no known platform never make a tile one platform.",
+      "Pattern 4 follows PostHog's case-sensitive exact match, so \"Card\" never matches \"card\"."
+    ]
+  },
+  "tiles": [
+    { "id": "insight:UcYLZY3g", "title": "Gift card redemptions", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 1, "verdict": "dead", "unknownParts": 0, "checks": ["event-has-call-site"], "reason": "gift_card_redeemed has no call site (the code sends giftcard_redeemed) and never arrives." },
+    { "id": "insight:8o2c555i", "title": "Book views by genre", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 2, "verdict": "dead", "unknownParts": 0, "checks": ["property-is-sent"], "reason": "exact filter on genre, a property book_viewed never carries (the code sends genre_id); a positive filter on a never-sent property matches nothing." },
+    { "id": "insight:LAE3dlyX", "title": "Review submissions", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 5, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "review_submitted is sent only by the web app." },
+    { "id": "insight:enmHMgmF", "title": "Added to cart (any platform)", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 9, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "action over added_to_cart (web) and added_to_cart_native (ios, android); both are sent." },
+    { "id": "insight:SkZbqbBJ", "title": "Wishlist adds (current and legacy)", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 10, "verdict": "live", "unknownParts": 0, "checks": [], "info": ["wishlist_added_legacy is a dead member of a live OR group"], "reason": "OR group: wishlist_added (web) and wishlist_synced (ios, android) are live, so the group is live." },
+    { "id": "insight:e5B0L8uS", "title": "Book returns", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 12, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "book_returned has a web call site, so it is live and web only; it never arrives, which the notArriving section reports." },
+    { "id": "insight:VzMJ7K3c", "title": "Daily active users", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 13, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "all-events node with DAU math: live, and never one platform." },
+    { "id": "insight:SFgJNhZk", "title": "Books viewed", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "book_viewed is sent only by the web app (mobile sends book_viewed_native)." },
+    { "id": "insight:yQjURXwH", "title": "Searches performed", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "search_performed is sent only by the web app." },
+    { "id": "insight:NzQhUkoX", "title": "Added to cart (web)", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "added_to_cart is sent only by the web app." },
+    { "id": "insight:QWZpfytG", "title": "Checkouts started", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "checkout_started is sent only by the web app." },
+    { "id": "insight:BsOf7Rvv", "title": "Orders completed (web)", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "order_completed is sent only by the web app." },
+    { "id": "insight:aTWqBToU", "title": "Revenue (web)", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "sum of total on order_completed: total is always sent; web only." },
+    { "id": "insight:crlmpqqL", "title": "Newsletter signups", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "newsletter_signup is sent only by the web app." },
+    { "id": "insight:TAMq79Jq", "title": "Shares via email", "dashboard": "Bookshop growth", "kind": "trends", "pattern": 16, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "no literal call site sends shared_via_email, but the open-world capture (shared_via_ plus a string) could, so the code fact is unknown; the event arrives, so it is live. Its platforms are unknown, so it is not one platform." },
+    { "id": "insight:7Thw3hGA", "title": "Browse to cart", "dashboard": "Bookshop growth", "kind": "funnels", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "both steps (book_viewed, added_to_cart) are sent, web only." },
+    { "id": "insight:c02EGVkO", "title": "Cart to order", "dashboard": "Bookshop growth", "kind": "funnels", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "both steps (added_to_cart, order_completed) are sent, web only." },
+    { "id": "insight:JgY7SDpt", "title": "Weekly active users", "dashboard": "Bookshop growth", "kind": "trends", "pattern": null, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "all-events node with weekly-active math." },
+    { "id": "insight:4hNDTQmF", "title": "Orders by format", "dashboard": "Checkout", "kind": "trends", "pattern": 3, "verdict": "degraded", "unknownParts": 0, "checks": ["property-is-sent"], "reason": "breakdown on format, never sent on order_completed: every row lands in one (none) bucket." },
+    { "id": "insight:HaZhYulJ", "title": "Checkout funnel (by payment method)", "dashboard": "Checkout", "kind": "funnels", "pattern": 4, "verdict": "partly-dead", "unknownParts": 0, "checks": ["value-is-reachable"], "reason": "step 2 filters payment_method = \"Card\"; the code only sends \"card\" or \"cash\" and exact is case-sensitive, so step 2 is dead and steps 2 to 3 are always zero." },
+    { "id": "insight:H98PFED0", "title": "Discount conversion", "dashboard": "Checkout", "kind": "trends", "pattern": 7, "verdict": "dead", "unknownParts": 0, "checks": ["event-has-call-site"], "reason": "formula B/A where B is discount_applied, which has no call site and never arrives: the formula is always zero." },
+    { "id": "insight:EFjT2ILD", "title": "Checkout funnel health", "dashboard": "Checkout", "kind": "trends", "pattern": 11, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "the part is the formula B/A over checkout_started and order_completed, both sent, web only. Its alert is the invalid-target case." },
+    { "id": "insight:CK9NsL46", "title": "Checkouts started (all platforms)", "dashboard": "Checkout", "kind": "trends", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "despite the title, checkout_started is sent only by the web app." },
+    { "id": "insight:BdPNF7uV", "title": "Orders completed (mobile)", "dashboard": "Checkout", "kind": "trends", "pattern": null, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "order_completed_native is sent by the mobile app (ios and android)." },
+    { "id": "insight:63vha18o", "title": "Checkout funnel (web)", "dashboard": "Checkout", "kind": "funnels", "pattern": null, "verdict": "one-platform", "unknownParts": 0, "checks": [], "reason": "both steps (checkout_started, order_completed) are sent, web only." },
+    { "id": "insight:3Qbbx3b3", "title": "Average order value (mobile)", "dashboard": "Checkout", "kind": "trends", "pattern": null, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "average of total on order_completed_native: total is always sent; ios and android." },
+    { "id": "insight:jneGS09T", "title": "Orders excluding gift wrap", "dashboard": "Mobile", "kind": "trends", "pattern": 6, "verdict": "degraded", "unknownParts": 0, "checks": ["property-is-sent"], "reason": "is_not filter on gift_wrap, never sent on order_completed_native: a negative filter on a missing property keeps every event, so the filter has no effect." },
+    { "id": "insight:AEaBraEi", "title": "Revenue per device", "dashboard": "Mobile", "kind": "sql", "pattern": 8, "verdict": "not-checked", "unknownParts": 0, "checks": [], "reason": "a SQL insight; dashlint does not read SQL." },
+    { "id": "insight:NHHE9ZhV", "title": "App opened funnel", "dashboard": "Mobile", "kind": "funnels", "pattern": 14, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "Application Opened and Application Became Active are posthog-react-native builtins, on because the init sets captureAppLifecycleEvents: true; both arrive." },
+    { "id": "insight:BU2riHDh", "title": "Wishlist synced (mobile)", "dashboard": "Mobile", "kind": "trends", "pattern": null, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "wishlist_synced is sent by the mobile app (ios and android)." },
+    { "id": "insight:9atqyQwr", "title": "Added to cart (mobile)", "dashboard": "Mobile", "kind": "trends", "pattern": null, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "added_to_cart_native is sent by the mobile app (ios and android)." },
+    { "id": "insight:C2iYOtIJ", "title": "Payment method selected", "dashboard": "Mobile", "kind": "trends", "pattern": null, "verdict": "live", "unknownParts": 0, "checks": [], "reason": "payment_method_selected is sent by the mobile app (ios and android)." }
+  ],
+  "alerts": [
+    { "name": "Checkout funnel health", "insight": "insight:EFjT2ILD", "pattern": 11, "status": "present", "result": "invalid-target", "reason": "series_index 2, but the insight has one formula and with formulas the index counts formula results." },
+    { "name": "Gift card redemptions dropped", "insight": "insight:UcYLZY3g", "pattern": 1, "status": "pending", "result": "can-never-fire", "reason": "relative decrease on a dead series: a constant zero never decreases." },
+    { "name": "Gift card redemptions below one", "insight": "insight:UcYLZY3g", "pattern": 1, "status": "pending", "result": "fires-every-check", "reason": "absolute value with lower bound 1 on a dead series: zero is always below it." },
+    { "name": "Web orders below one", "insight": "insight:BsOf7Rvv", "pattern": null, "status": "pending", "result": "ok", "reason": "absolute value with lower bound 1 on a live series: a healthy alert, no finding." },
+    { "name": "v4 spike: never-sent relative decrease", "insight": "insight:yZ72rtTN", "pattern": null, "status": "temporary", "result": "can-never-fire", "reason": "v4_never_sent has no call site and never arrives; relative decrease on a constant zero." },
+    { "name": "v4 spike: never-sent absolute lower", "insight": "insight:yZ72rtTN", "pattern": null, "status": "temporary", "result": "fires-every-check", "reason": "absolute value with lower bound 1 on a dead series." },
+    { "name": "v4 spike: never-sent absolute upper", "insight": "insight:yZ72rtTN", "pattern": null, "status": "temporary", "result": "can-never-fire", "reason": "absolute value with only an upper bound (100) on a dead series." },
+    { "name": "v4 spike: daily relative decrease", "insight": "insight:QOThCvP8", "pattern": null, "status": "temporary", "result": "ok", "reason": "v4_daily has no call site but arrives once a day from the traffic script (produced elsewhere), so the series is live." }
+  ],
+  "notArriving": ["book_returned"]
+}

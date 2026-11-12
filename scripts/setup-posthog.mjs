@@ -1,11 +1,12 @@
-// T9.3: idempotently create the demo project's insights, dashboards, action and one alert.
+// T9.3, T9.5: idempotently create the demo project's insights, dashboards, action and alerts, bring
+// existing insights to their wanted query, and retire PostHog's starter dashboard.
 //   node runner/with-key.mjs dashlint-posthog-demo-write -- node demo/scripts/setup-posthog.mjs --service dashlint-posthog-demo-write
 //
-// Objects are matched by name, so a second run creates nothing (CREATED 0). Refuses (exit 1) unless
+// Objects are matched by name, so a second run changes nothing (CREATED 0 UPDATED 0 RETIRED 0). Refuses (exit 1) unless
 // the key is the demo write key (same fingerprint check as scripts/v4-spike.mjs: insights readable,
 // event_definitions refused for a missing scope). Never touches the production project (G13) and
 // never touches the 4 V4-spike alerts (ADR-005, ADR-009): only 1 new alert fits the free plan's
-// 5-alert budget today, and the spike alerts are reserved for T0.7 (not before 2026-11-15).
+// 5-alert budget while they exist, so the other 3 stay pending until T0.7 has read them.
 //
 // Patterns reference spec section 6.17.1's numbering; each insight and the one action and one alert
 // below exist to make one or more of those 16 patterns real and checkable, plus plain filler
@@ -90,11 +91,13 @@ const INSIGHTS = [
   { name: 'Checkout funnel (by payment method)', dash: 'checkout', query: { kind: 'InsightVizNode', source: { kind: 'FunnelsQuery', series: [ev('checkout_started'), { ...ev('payment_method_selected'), properties: [{ key: 'payment_method', type: 'event', operator: 'exact', value: ['Card'] }] }, ev('order_completed_native')], dateRange: { date_from: '-30d' } } }, description: 'dashlint-demo pattern 4: step filter checks "Card"; the app always sends "card".' },
   { name: 'Review submissions', dash: 'growth', query: trends([ev('review_submitted')]), description: 'dashlint-demo pattern 5: only the web app sends this event.' },
   { name: 'Orders excluding gift wrap', dash: 'mobile', query: trends([ev('order_completed_native')], { properties: [{ key: 'gift_wrap', type: 'event', operator: 'is_not', value: 'false' }] }), description: 'dashlint-demo pattern 6: negative filter on "gift_wrap", never attached to this event.' },
-  { name: 'Discount conversion', dash: 'checkout', query: trends([ev('checkout_started'), ev('discount_applied')], { trendsFilter: { formula: 'B/A' } }), description: 'dashlint-demo pattern 7: formula divides by "discount_applied", permanently off.' },
+  { name: 'Discount conversion', dash: 'checkout', query: trends([ev('checkout_started'), ev('discount_applied')], { trendsFilter: { formula: 'B/A' } }), description: 'dashlint-demo pattern 7: formula B/A over "discount_applied", whose call was deleted with the launch discount; the formula can only be zero.' },
   { name: 'Revenue per device', dash: 'mobile', query: hogql("select properties.$device_type as device, sum(toFloat(properties.total)) as revenue from events where event = 'order_completed_native' group by device"), description: 'dashlint-demo pattern 8: a SQL insight, not checked.' },
   { name: 'Added to cart (any platform)', dash: 'growth', query: null, description: 'dashlint-demo pattern 9: an action-based series over added_to_cart and added_to_cart_native.' },
-  { name: 'Wishlist adds (current and legacy)', dash: 'growth', query: trends([ev('wishlist_added'), ev('wishlist_added_legacy')], { trendsFilter: { formula: 'A+B' } }), description: 'dashlint-demo pattern 10: one live series (wishlist_added), one dead (wishlist_added_legacy); the group stays live.' },
-  { name: 'Checkout funnel health', dash: 'checkout', query: trends([ev('checkout_started'), ev('discount_applied'), ev('added_to_cart')]), description: 'dashlint-demo pattern 11: a formula series was inserted at index 1 after the "Checkout funnel health" alert was built against series index 2 (then the completion step); the alert still reads index 2.' },
+  { name: 'Wishlist adds (current and legacy)', dash: 'growth', query: trends([{ kind: 'GroupNode', operator: 'OR', name: 'Wishlist adds', math: 'total', nodes: [ev('wishlist_added'), ev('wishlist_synced'), ev('wishlist_added_legacy')] }]), description: 'dashlint-demo pattern 10: an OR group of wishlist_added (web), wishlist_synced (mobile) and the dead wishlist_added_legacy; the group stays live.' },
+  // created without the formula so the alert on index 2 can be saved (PostHog rejects an
+  // out-of-range index on save), then brought to `query` in step 5, after the alert exists.
+  { name: 'Checkout funnel health', dash: 'checkout', initialQuery: trends([ev('checkout_started'), ev('order_completed'), ev('added_to_cart')]), query: trends([ev('checkout_started'), ev('order_completed'), ev('added_to_cart')], { trendsFilter: { formulaNodes: [{ formula: 'B/A' }] } }), description: 'dashlint-demo pattern 11: the "Checkout funnel health" alert was built against series index 2; a formula was added later, and with formulas series_index counts formula results (one), so index 2 is out of range.' },
   { name: 'Book returns', dash: 'growth', query: trends([ev('book_returned')]), description: 'dashlint-demo pattern 12: coded and reachable, never driven by scripts/traffic.mjs.' },
   { name: 'Daily active users', dash: 'growth', query: trends([{ ...ev(null), math: 'dau' }]), description: 'dashlint-demo pattern 13: an all-events DAU denominator (only $pageview arrives on an otherwise silent session).' },
   { name: 'App opened funnel', dash: 'mobile', query: funnel(['Application Opened', 'Application Became Active']), description: 'dashlint-demo pattern 14: posthog-react-native lifecycle events with no call site in this app.' },
@@ -121,14 +124,27 @@ const INSIGHTS = [
 
 const ACTION = { name: 'Added to cart (any platform)', steps: [{ event: 'added_to_cart' }, { event: 'added_to_cart_native' }] };
 
-const ALERT = {
-  name: 'Checkout funnel health',
-  insight: 'Checkout funnel health',
-  condition: 'relative_decrease',
-  bounds: { upper: 1 },
-  series_index: 2,
-};
+// The pattern-11 alert first; the other three are created only once the free-plan budget has room
+// (after the V4-spike alerts are removed, ADR-009). The expected verdict of each is in
+// expected/expected.json.
+const ALERTS = [
+  { name: 'Checkout funnel health', insight: 'Checkout funnel health', condition: 'relative_decrease', bounds: { upper: 1 }, series_index: 2 },
+  { name: 'Gift card redemptions dropped', insight: 'Gift card redemptions', condition: 'relative_decrease', bounds: { upper: 1 }, series_index: 0 },
+  { name: 'Gift card redemptions below one', insight: 'Gift card redemptions', condition: 'absolute_value', bounds: { lower: 1 }, series_index: 0 },
+  { name: 'Web orders below one', insight: 'Orders completed (web)', condition: 'absolute_value', bounds: { lower: 1 }, series_index: 0 },
+];
 const FREE_PLAN_ALERT_LIMIT = 5; // research/posthog-limits.md (D5); ADR-009 keeps the 4 V4-spike alerts untouched.
+
+// PostHog creates this dashboard (and its 9 insights) in every new project; the demo's dashboards
+// are the three above (spec 6.17.1), so setup moves it to PostHog's trash (soft delete, restorable).
+const RETIRED_DASHBOARDS = ['Your starter dashboard'];
+
+// true when every key of `want` is in `have` with an equal value (PostHog adds defaults on save).
+function covers(have, want) {
+  if (want === null || typeof want !== 'object') return have === want;
+  if (Array.isArray(want)) return Array.isArray(have) && have.length === want.length && want.every((w, i) => covers(have[i], w));
+  return have !== null && typeof have === 'object' && Object.entries(want).every(([k, v]) => covers(have[k], v));
+}
 
 const record = { project: DEMO_PROJECT, host: HOST, ran_at: new Date().toISOString(), actions: [], insights: [], dashboards: [], alerts: [] };
 let created = 0;
@@ -187,9 +203,10 @@ for (const want of INSIGHTS) {
     // pattern 9: the action-based series, built once the action id is known.
     query = trends([{ kind: 'ActionsNode', id: actionId, name: ACTION.name, math: 'total' }]);
   }
+  want.resolved = query;
   let found = existingInsights.find((i) => i.name === want.name && !i.deleted);
   if (!found) {
-    const r = await api('POST', 'insights/', { name: want.name, query, description: want.description ?? 'dashlint demo (T9.3)', dashboards: dashboardId ? [dashboardId] : [] });
+    const r = await api('POST', 'insights/', { name: want.name, query: want.initialQuery ?? query, description: want.description ?? 'dashlint demo (T9.3)', dashboards: dashboardId ? [dashboardId] : [] });
     if (r.status !== 201) {
       console.log(`insight ${want.name}: POST -> HTTP ${r.status} ${JSON.stringify(r.json).slice(0, 300)}`);
       failed++;
@@ -211,15 +228,18 @@ for (const want of INSIGHTS) {
   record.insights.push({ name: want.name, id: found.id, dash: want.dash });
 }
 
-// 4. One alert (pattern 11, ADR-009: the free plan has 1 slot left under the 4 V4-spike alerts).
+// 4. Alerts, while the free plan's budget has room (ADR-009: the 4 V4-spike alerts hold 4 of 5 slots
+// until T0.7 has read them).
 const existingAlerts = await listAll('alerts/?limit=100');
-const alertBudget = FREE_PLAN_ALERT_LIMIT - existingAlerts.length;
+let alertCount = existingAlerts.length;
+for (const ALERT of ALERTS) {
 const alertFound = existingAlerts.find((a) => a.name === ALERT.name);
 if (alertFound) {
   record.alerts.push({ action: 'found', name: ALERT.name, id: alertFound.id });
   console.log(`alert ${ALERT.name}: found id=${alertFound.id}`);
-} else if (alertBudget < 1) {
-  console.log(`alert ${ALERT.name}: skipped, free-plan budget full (${existingAlerts.length}/${FREE_PLAN_ALERT_LIMIT}, ADR-009)`);
+} else if (alertCount >= FREE_PLAN_ALERT_LIMIT) {
+  record.alerts.push({ action: 'pending', name: ALERT.name });
+  console.log(`alert ${ALERT.name}: pending, free-plan budget full (${alertCount}/${FREE_PLAN_ALERT_LIMIT}, ADR-009)`);
 } else if (!insightIds[ALERT.insight] || !anyUser) {
   console.log(`alert ${ALERT.name}: skipped (no insight id or no subscriber id)`);
   failed++;
@@ -237,6 +257,7 @@ if (alertFound) {
   const r = await api('POST', 'alerts/', body);
   if (r.status === 201) {
     created++;
+    alertCount++;
     record.alerts.push({ action: 'created', name: ALERT.name, id: r.json.id, state: r.json.state });
     console.log(`alert ${ALERT.name}: created id=${r.json.id} state=${r.json.state}`);
   } else {
@@ -244,8 +265,52 @@ if (alertFound) {
     console.log(`alert ${ALERT.name}: POST -> HTTP ${r.status} ${JSON.stringify(r.json).slice(0, 300)}`);
   }
 }
+}
+
+// 5. Bring every insight to its wanted query and description (after the alerts, see pattern 11).
+const savedInsights = await listAll('insights/?limit=100');
+let updated = 0;
+for (const want of INSIGHTS) {
+  const have = savedInsights.find((i) => i.id === insightIds[want.name]);
+  if (!have) continue;
+  const body = {};
+  if (!covers(have.query, want.resolved)) body.query = want.resolved;
+  if (want.description && have.description !== want.description) body.description = want.description;
+  if (!Object.keys(body).length) continue;
+  const r = await api('PATCH', `insights/${have.id}/`, body);
+  if (r.status === 200) {
+    updated++;
+    console.log(`insight ${want.name}: updated ${Object.keys(body).join(', ')}`);
+  } else {
+    failed++;
+    console.log(`insight ${want.name}: PATCH -> HTTP ${r.status} ${JSON.stringify(r.json).slice(0, 300)}`);
+  }
+}
+
+// 6. Retire PostHog's starter dashboard and the insights that live only on it.
+let retired = 0;
+for (const name of RETIRED_DASHBOARDS) {
+  const d = existingDashboards.find((x) => x.name === name && !x.deleted);
+  if (!d) continue;
+  const only = savedInsights.filter((i) => !i.deleted && Array.isArray(i.dashboards) && i.dashboards.length === 1 && i.dashboards[0] === d.id);
+  for (const i of only) {
+    const r = await api('PATCH', `insights/${i.id}/`, { deleted: true });
+    if (r.status === 200) retired++;
+    else failed++;
+  }
+  const r = await api('PATCH', `dashboards/${d.id}/`, { deleted: true });
+  if (r.status === 200) {
+    retired++;
+    console.log(`dashboard ${name}: retired with ${only.length} insights`);
+  } else {
+    failed++;
+    console.log(`dashboard ${name}: PATCH -> HTTP ${r.status} ${JSON.stringify(r.json).slice(0, 300)}`);
+  }
+}
+record.updated = updated;
+record.retired = retired;
 
 mkdirSync(OUT_DIR, { recursive: true });
 writeFileSync(join(OUT_DIR, 'setup.json'), `${JSON.stringify(record, null, 2)}\n`);
-console.log(`CREATED ${created} FAILED ${failed} (record: demo/.setup-posthog/setup.json)`);
+console.log(`CREATED ${created} UPDATED ${updated} RETIRED ${retired} FAILED ${failed} (record: demo/.setup-posthog/setup.json)`);
 process.exit(failed ? 1 : 0);

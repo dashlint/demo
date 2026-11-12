@@ -2,8 +2,6 @@ import { useMemo, useState } from 'react'
 import { books, type Book } from './catalog'
 import { track, trackDynamic } from './analytics'
 
-const LAUNCH_DISCOUNT_ENABLED = false
-
 function App() {
   const [query, setQuery] = useState('')
   const [cart, setCart] = useState<Book[]>([])
@@ -34,18 +32,10 @@ function App() {
 
   function startCheckout() {
     const total = cart.reduce((sum, book) => sum + book.price, 0)
+    // dashlint-demo pattern 7: the launch discount was retired and its "discount_applied" call
+    // was deleted from this function. The "Discount conversion" tile still divides by a series
+    // built on that event, so its formula can only ever be zero: dead.
     track('checkout_started', { cart_total: total, item_count: cart.length })
-
-    maybeApplyLaunchDiscount(total)
-  }
-
-  function maybeApplyLaunchDiscount(total: number) {
-    // dashlint-demo pattern 7: this flag is permanently off, so "discount_applied" never
-    // actually fires. A dashboard formula that divides by this series as its denominator is
-    // dead, even though the event name is real and spelled correctly.
-    if (LAUNCH_DISCOUNT_ENABLED) {
-      track('discount_applied', { discount_pct: 10, cart_total: total })
-    }
   }
 
   function completeOrder() {
@@ -73,8 +63,8 @@ function App() {
   }
 
   function addToWishlist(book: Book) {
-    // dashlint-demo pattern 10: a live series (paired, in the dashboard, with a dead
-    // "wishlist_added_legacy" series in the same OR group; the group as a whole stays live).
+    // dashlint-demo pattern 10: a live member of an OR group on the dashboard (with the mobile
+    // app's "wishlist_synced" and a dead "wishlist_added_legacy"; the group as a whole stays live).
     track('wishlist_added', { book_id: book.id })
   }
 

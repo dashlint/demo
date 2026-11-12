@@ -22,7 +22,6 @@ type ShopEventName =
   | 'newsletter_signup'
   | 'book_returned'
   | 'giftcard_redeemed'
-  | 'discount_applied'
 
 // dashlint-demo pattern 15: a track() wrapper whose event parameter is a literal union, so the
 // catalog of names it can send is closed and knowable from the type alone.

@@ -6,7 +6,7 @@
 // Deliberately never sends, so the matching dashlint-demo pattern stays dead or "not arriving":
 //   gift_card_redeemed (pattern 1, renamed to giftcard_redeemed), format on order_completed
 //   (pattern 3), payment_method in any case other than lowercase (pattern 4, until V3 ships),
-//   discount_applied (pattern 7, the launch-discount flag is permanently off), gift_wrap on
+//   discount_applied (pattern 7, its call was deleted with the launch discount), gift_wrap on
 //   order_completed_native (pattern 6), wishlist_added_legacy (pattern 10), book_returned
 //   (pattern 12, ADR-010), book_viewed's "genre" property (pattern 2, only genre_id is sent).
 //
@@ -81,6 +81,10 @@ for (let n = 0; n < PEOPLE; n++) {
   send('Application Opened', distinctId, {}, t + 9, 'Mobile');
   send('Application Became Active', distinctId, {}, t + 8, 'Mobile');
 }
+
+// The V4 alert spike's control event (ADR-005): one a day, so its alert watches a live series. No
+// app code sends it.
+send('v4_daily', 'demo-person-0', {}, 1, 'Desktop');
 
 async function sendBatch(batch) {
   const res = await fetch(`${CAPTURE_HOST}/batch/`, {
