@@ -1,0 +1,13 @@
+# gitleaks configuration for dashlint/demo, picked up by the pre-push hook.
+# The demo project's public project token (phc_...) is meant to run client-side (it ships inside
+# the web and mobile app bundles already) and is read-only for ingestion: it is not a secret, so it
+# is allowlisted by its exact value here (H0 Q8, research/posthog-limits.md). Every other path and
+# value keeps the default rules.
+title = "dashlint demo"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "the demo PostHog project's public project token (not a secret)"
+regexes = ['''phc_tJXbib2kGKL6pSAwwiE2UaD2RbkZboZPUL6zqFZ3cqWA''']
