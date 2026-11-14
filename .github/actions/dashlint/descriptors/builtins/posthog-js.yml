@@ -1,0 +1,306 @@
+# Builtins of posthog-js (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2).
+sdk: posthog-js
+events:
+  - { name: '$autocapture', when: { option: 'autocapture', not: false } }
+  - { name: '$pageview', when: { option: 'capture_pageview', not: false } }
+  - { name: '$pageleave', when: { option: 'capture_pageleave', not: false } }
+  - { name: '$identify', when: { option: 'person_profiles', not: 'never' } }
+  - { name: '$set', when: { option: 'person_profiles', not: 'never' } }
+  - { name: '$groupidentify', when: { option: 'person_profiles', not: 'never' } }
+  - { name: '$create_alias', when: { option: 'person_profiles', not: 'never' } }
+  - {
+      name: '$opt_in',
+      when:
+        {
+          unknown: 'sent only after the app calls opt_in_capturing(), unless its captureEventName option is null or false',
+        },
+    }
+  - { name: '$exception', when: { option: 'capture_exceptions', is: true } }
+  - {
+      name: '$web_vitals',
+      when:
+        {
+          unknown: 'default depends on server-side remote-config flag (WEB_VITALS_ENABLED_SERVER_SIDE) unless capture_performance is set client-side',
+        },
+    }
+  - { name: '$rageclick', when: { option: 'rageclick', not: false } }
+  - {
+      name: '$dead_click',
+      when:
+        {
+          unknown: "capture_dead_clicks client option or the project's remote config; the extension loads lazily",
+        },
+    }
+properties:
+  - { name: '$current_url', events: '*', presence: always, when: always }
+  - { name: '$host', events: '*', presence: always, when: always }
+  - { name: '$pathname', events: '*', presence: always, when: always }
+  - { name: '$browser', events: '*', presence: always, when: always }
+  - { name: '$browser_version', events: '*', presence: always, when: always }
+  - { name: '$os', events: '*', presence: always, when: always }
+  - { name: '$os_version', events: '*', presence: always, when: always }
+  - { name: '$device_type', events: '*', presence: always, when: always }
+  - { name: '$screen_height', events: '*', presence: always, when: always }
+  - { name: '$screen_width', events: '*', presence: always, when: always }
+  - { name: '$viewport_height', events: '*', presence: always, when: always }
+  - { name: '$viewport_width', events: '*', presence: always, when: always }
+  - { name: '$raw_user_agent', events: '*', presence: always, when: always }
+  - { name: '$lib', events: '*', presence: always, when: always }
+  - { name: '$lib_version', events: '*', presence: always, when: always }
+  - { name: '$insert_id', events: '*', presence: always, when: always }
+  - { name: '$time', events: '*', presence: always, when: always }
+  - { name: '$session_id', events: '*', presence: always, when: always }
+  - { name: '$window_id', events: '*', presence: always, when: always }
+  - { name: '$pageview_id', events: '*', presence: always, when: always }
+  - {
+      name: '$prev_pageview_pathname',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when:
+        {
+          unknown: "not option-gated; only present once a previous pageview exists in this session's in-memory state (page-view.js _currentPageview)",
+        },
+    }
+  - {
+      name: '$referrer',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_referrer', not: false },
+    }
+  - {
+      name: '$referring_domain',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_referrer', not: false },
+    }
+  - {
+      name: 'utm_source',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: '$set_once',
+      events: ['$identify', '$groupidentify', '$create_alias'],
+      presence: sometimes,
+      when: { option: 'person_profiles', not: 'never' },
+    }
+  - {
+      name: 'gclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'gclsrc',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'dclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'gbraid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'wbraid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'fbclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'msclkid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'twclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'li_fat_id',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'igshid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'ttclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'rdt_cid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'epik',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'qclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'sccid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'oppref',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'bfcid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'irclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: '_kx',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'utm_medium',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'utm_campaign',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'utm_content',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'utm_term',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'gad_source',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: 'mc_cid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'save_campaign_params', not: false },
+    }
+  - {
+      name: '$prev_pageview_id',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when:
+        {
+          unknown: "not option-gated; only present once a previous pageview exists in this session's in-memory state (page-view.js _currentPageview)",
+        },
+    }
+  - {
+      name: '$prev_pageview_duration',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when:
+        {
+          unknown: "not option-gated; only present once a previous pageview exists in this session's in-memory state (page-view.js _currentPageview)",
+        },
+    }
+  - {
+      name: '$prev_pageview_last_scroll',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+  - {
+      name: '$prev_pageview_last_scroll_percentage',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+  - {
+      name: '$prev_pageview_max_scroll',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+  - {
+      name: '$prev_pageview_max_scroll_percentage',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+  - {
+      name: '$prev_pageview_last_content',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+  - {
+      name: '$prev_pageview_last_content_percentage',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+  - {
+      name: '$prev_pageview_max_content',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+  - {
+      name: '$prev_pageview_max_content_percentage',
+      events: ['$pageview', '$pageleave'],
+      presence: sometimes,
+      when: { option: 'disable_scroll_properties', not: true },
+    }
+personProperties: []

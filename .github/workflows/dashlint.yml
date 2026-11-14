@@ -1,0 +1,13 @@
+name: dashlint
+on:
+  pull_request:
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  dashlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # A vendored copy of dashlint/action while the repos are private; dashlint/action@v0 after.
+      - uses: ./.github/actions/dashlint

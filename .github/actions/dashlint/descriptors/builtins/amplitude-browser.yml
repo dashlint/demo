@@ -1,0 +1,210 @@
+# Builtins of amplitude-browser (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2); the option paths are
+# corrected from the source by ADR-055 (notes/scripts/t43-builtins.mjs).
+sdk: amplitude-browser
+events:
+  - { name: '[Amplitude] Page Viewed', when: { option: 'autocapture.pageViews', not: false } }
+  - { name: 'session_start', when: { option: 'autocapture.sessions', not: false } }
+  - { name: 'session_end', when: { option: 'autocapture.sessions', not: false } }
+  - {
+      name: '[Amplitude] Element Clicked',
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - { name: '[Amplitude] Web Vitals', when: { option: 'autocapture.webVitals', is: true } }
+  - {
+      name: '[Amplitude] Form Started',
+      when: { option: 'autocapture.formInteractions', not: false },
+    }
+  - {
+      name: '[Amplitude] Form Submitted',
+      when: { option: 'autocapture.formInteractions', not: false },
+    }
+  - {
+      name: '[Amplitude] File Downloaded',
+      when: { option: 'autocapture.fileDownloads', not: false },
+    }
+properties:
+  - {
+      name: '[Amplitude] Page Domain',
+      events: ['[Amplitude] Page Viewed'],
+      presence: always,
+      when: { option: 'autocapture.pageViews', not: false },
+    }
+  - {
+      name: '[Amplitude] Page Location',
+      events: ['[Amplitude] Page Viewed'],
+      presence: always,
+      when: { option: 'autocapture.pageViews', not: false },
+    }
+  - {
+      name: '[Amplitude] Page Path',
+      events: ['[Amplitude] Page Viewed'],
+      presence: always,
+      when: { option: 'autocapture.pageViews', not: false },
+    }
+  - {
+      name: '[Amplitude] Page Title',
+      events: ['[Amplitude] Page Viewed'],
+      presence: always,
+      when: { option: 'autocapture.pageViews', not: false },
+    }
+  - {
+      name: '[Amplitude] Page URL',
+      events: ['[Amplitude] Page Viewed'],
+      presence: always,
+      when: { option: 'autocapture.pageViews', not: false },
+    }
+  - {
+      name: '[Amplitude] Page View ID',
+      events: ['[Amplitude] Page Viewed'],
+      presence: always,
+      when: { option: 'autocapture.pageViews', not: false },
+    }
+  - {
+      name: '[Amplitude] Page Counter',
+      events: ['[Amplitude] Page Viewed'],
+      presence: always,
+      when: { option: 'autocapture.pageViews', not: false },
+    }
+  - {
+      name: '[Amplitude] Element ID',
+      events: ['[Amplitude] Element Clicked'],
+      presence: always,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Element Text',
+      events: ['[Amplitude] Element Clicked'],
+      presence: always,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Element Hierarchy',
+      events: ['[Amplitude] Element Clicked'],
+      presence: always,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] LCP',
+      events: ['[Amplitude] Web Vitals'],
+      presence: always,
+      when: { option: 'autocapture.webVitals', is: true },
+    }
+  - {
+      name: '[Amplitude] CLS',
+      events: ['[Amplitude] Web Vitals'],
+      presence: always,
+      when: { option: 'autocapture.webVitals', is: true },
+    }
+  - {
+      name: '[Amplitude] Previous Page Location',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'autocapture.pageUrlEnrichment', not: false },
+    }
+  - {
+      name: '[Amplitude] Previous Page Type',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'autocapture.pageUrlEnrichment', not: false },
+    }
+  - {
+      name: 'utm_source',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'autocapture.attribution', not: false },
+    }
+  - {
+      name: 'utm_campaign',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'autocapture.attribution', not: false },
+    }
+  - {
+      name: 'platform',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.platform', not: false },
+    }
+  - {
+      name: 'language',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.language', not: false },
+    }
+  - {
+      name: 'ip',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.ipAddress', not: false },
+    }
+  - { name: 'library', events: '*', presence: always, when: always }
+  - {
+      name: '[Amplitude] File Extension',
+      events: ['[Amplitude] File Downloaded'],
+      presence: sometimes,
+      when: { option: 'autocapture.fileDownloads', not: false },
+    }
+  - {
+      name: '[Amplitude] File Name',
+      events: ['[Amplitude] File Downloaded'],
+      presence: sometimes,
+      when: { option: 'autocapture.fileDownloads', not: false },
+    }
+  - {
+      name: '[Amplitude] Link ID',
+      events: ['[Amplitude] File Downloaded'],
+      presence: sometimes,
+      when: { option: 'autocapture.fileDownloads', not: false },
+    }
+  - {
+      name: '[Amplitude] Link Text',
+      events: ['[Amplitude] File Downloaded'],
+      presence: sometimes,
+      when: { option: 'autocapture.fileDownloads', not: false },
+    }
+  - {
+      name: '[Amplitude] Link URL',
+      events: ['[Amplitude] File Downloaded'],
+      presence: sometimes,
+      when: { option: 'autocapture.fileDownloads', not: false },
+    }
+  - {
+      name: '[Amplitude] Form ID',
+      events: ['[Amplitude] Form Started', '[Amplitude] Form Submitted'],
+      presence: sometimes,
+      when: { option: 'autocapture.formInteractions', not: false },
+    }
+  - {
+      name: '[Amplitude] Form Name',
+      events: ['[Amplitude] Form Started', '[Amplitude] Form Submitted'],
+      presence: sometimes,
+      when: { option: 'autocapture.formInteractions', not: false },
+    }
+  - {
+      name: '[Amplitude] Form Destination',
+      events: ['[Amplitude] Form Started', '[Amplitude] Form Submitted'],
+      presence: sometimes,
+      when: { option: 'autocapture.formInteractions', not: false },
+    }
+personProperties:
+  - { name: 'utm_source', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'utm_campaign', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'referrer', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'gclid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'utm_content', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'utm_id', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'utm_medium', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'utm_term', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'dclid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'fbclid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'gbraid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'ko_click_id', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'li_fat_id', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'msclkid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'rdt_cid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'ttclid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'twclid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'wbraid', when: { option: 'autocapture.attribution', not: false } }
+  - { name: 'referring_domain', when: { option: 'autocapture.attribution', not: false } }

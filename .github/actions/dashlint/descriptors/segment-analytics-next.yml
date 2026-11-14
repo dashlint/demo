@@ -1,0 +1,64 @@
+# @segment/analytics-next: Segment's browser SDK (@segment/analytics-next 1.84.3). The object
+# AnalyticsBrowser.load() returns holds its members as arrow-typed properties of AnalyticsBuffered
+# (dist/types/core/buffer/index.d.ts); the loaded Analytics class
+# (dist/types/core/analytics/index.d.ts) and its AnalyticsCore interface
+# (dist/types/core/analytics/interfaces.d.ts) declare them as methods with rest-tuple parameters.
+sdk: segment-analytics-next
+package: '@segment/analytics-next'
+versions: '>=1.0.0 <2.0.0'
+verified: 1.84.3
+declaredIn: ['@segment/analytics-next']
+platforms: [web]
+calls:
+  # track(eventName: string | SegmentEvent, properties?, options?, callback?). Given an event
+  # object, the name is its `event` and the properties its `properties`; the second argument is
+  # then the options (src/core/arguments-resolver/index.ts:30-48, ADR-056).
+  - member: track
+    on: [Analytics, AnalyticsCore, AnalyticsBuffered]
+    event: args[0]
+    properties: args[1]
+    objectForm:
+      event: args[0].event
+      properties: args[0].properties
+  # trackLink(links, event, properties?, options?) and its aliases track the event on each click
+  # or submit; an event or properties given as a function is read per element at runtime, which
+  # is open world (src/core/auto-track.ts:36-70, 100-106).
+  - member: trackLink
+    on: [Analytics, AnalyticsBuffered]
+    event: args[1]
+    properties: args[2]
+  - member: trackClick
+    on: [Analytics, AnalyticsBuffered]
+    event: args[1]
+    properties: args[2]
+  - member: trackSubmit
+    on: [Analytics, AnalyticsBuffered]
+    event: args[1]
+    properties: args[2]
+  # trackForm is an alias of trackSubmit on the loaded Analytics class only.
+  - member: trackForm
+    on: [Analytics]
+    event: args[1]
+    properties: args[2]
+  # identify(id?, traits?, options?, callback?): an object in place of the id is the traits
+  # (resolveUserArguments, src/core/arguments-resolver/index.ts:163-183, ADR-056).
+  - member: identify
+    on: [Analytics, AnalyticsCore, AnalyticsBuffered]
+    identity: identify
+    personSet: args[1]
+    objectForm:
+      personSet: args[0]
+  - member: reset
+    on: [Analytics, AnalyticsBuffered]
+    identity: reset
+builtins: builtins/segment-analytics-next.yml
+stub: stubs/segment-analytics-next.d.ts
+unknownNames:
+  # page() and screen() calls have no event name of their own: each destination names them
+  # ($pageview and $screen in PostHog, "Loaded a Page" or "Viewed <name> Page" in others), so they
+  # are not sites in v0.1 and such names are never dead (ADR-056).
+  events: [$, 'Loaded a ', 'Viewed ']
+  # Destinations map the event context (page, user agent, campaign) to their own properties,
+  # PostHog's with a `$` (ADR-056).
+  properties: [$]
+  personProperties: [$]

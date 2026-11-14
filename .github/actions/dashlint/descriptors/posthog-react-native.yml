@@ -1,0 +1,56 @@
+# posthog-react-native: the React Native SDK. Its PostHog class (posthog-react-native 4.86.0,
+# dist/posthog-rn.d.ts) extends PostHogCore, which extends PostHogCoreStateless (@posthog/core
+# 1.67.2); a member the subclass does not redeclare (capture) resolves to the base declaration.
+sdk: posthog-react-native
+package: posthog-react-native
+versions: '>=4.0.0 <5.0.0'
+verified: 4.86.0
+declaredIn: [posthog-react-native, '@posthog/core']
+platforms: [ios, android]
+calls:
+  - member: capture
+    on: [PostHogCore]
+    event: args[0]
+    properties: args[1]
+  - member: screen
+    on: [PostHog]
+    event: { literal: $screen }
+    properties: args[1]
+    addProperties:
+      $screen_name: args[0]
+  - member: register
+    on: [PostHog, PostHogCoreStateless]
+    superProperties: args[0]
+  # identify(distinctId, properties): properties.$set and $set_once are promoted; with no $set the
+  # whole object is $set, less the keys the SDK consumes (@posthog/core src/posthog-core.ts).
+  - member: identify
+    on: [PostHog, PostHogCore]
+    identity: identify
+    personSet: args[1].$set
+    personSetOnce: args[1].$set_once
+    personSetFallback:
+      from: args[1]
+      omit: [$set_once, $groups]
+  - member: setPersonProperties
+    on: [PostHog, PostHogCore]
+    personSet: args[0]
+    personSetOnce: args[1]
+  - member: reset
+    on: [PostHog, PostHogCore]
+    identity: reset
+  - hook: usePostHog
+# Init options for builtin conditions: new PostHog(projectToken, options), or the provider's options
+# prop (dist/PostHogProvider.d.ts, PostHogProviderProps).
+init:
+  - member: constructor
+    on: [PostHog]
+    options: args[1]
+  - component: PostHogProvider
+    options: options
+builtins: builtins/posthog-react-native.yml
+# What PostHog adds on ingestion (GeoIP), whichever SDK sent the event (ADR-029).
+ingestion: builtins/posthog-ingestion.yml
+stub: stubs/posthog-react-native.d.ts
+unknownNames:
+  # PostHog derives $initial_* person properties by concatenation (ADR-003); kept unknown here too.
+  personProperties: [$initial_]

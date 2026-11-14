@@ -1,0 +1,180 @@
+# Builtins of mixpanel-browser (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2).
+sdk: mixpanel-browser
+events:
+  - {
+      name: '$mp_web_page_view',
+      when:
+        {
+          unknown: 'sent when track_pageview is true or a URL mode string, or when autocapture is on (its pageview sub-option defaults to full-url); both default off',
+        },
+    }
+  - { name: '$mp_click', when: { option: 'autocapture', is: true } }
+  - { name: '$mp_dead_click', when: { option: 'autocapture', is: true } }
+  - { name: '$mp_input_change', when: { option: 'autocapture', is: true } }
+  - { name: '$mp_rage_click', when: { option: 'autocapture', is: true } }
+  - { name: '$mp_scroll', when: { option: 'autocapture', is: true } }
+  - { name: '$mp_submit', when: { option: 'autocapture', is: true } }
+  - {
+      name: '$mp_page_leave',
+      when:
+        {
+          unknown: 'needs autocapture on and its page_leave sub-option set to true (default false)',
+        },
+    }
+properties:
+  - { name: '$browser', events: '*', presence: always, when: always }
+  - { name: '$browser_version', events: '*', presence: always, when: always }
+  - { name: '$os', events: '*', presence: always, when: always }
+  - { name: '$device', events: '*', presence: always, when: always }
+  - { name: '$current_url', events: '*', presence: always, when: always }
+  - { name: '$referrer', events: '*', presence: sometimes, when: always }
+  - { name: '$referring_domain', events: '*', presence: sometimes, when: always }
+  - { name: '$screen_height', events: '*', presence: always, when: always }
+  - { name: '$screen_width', events: '*', presence: always, when: always }
+  - { name: 'mp_lib', events: '*', presence: always, when: always }
+  - { name: '$lib_version', events: '*', presence: always, when: always }
+  - { name: '$insert_id', events: '*', presence: always, when: always }
+  - { name: 'time', events: '*', presence: always, when: always }
+  - { name: 'distinct_id', events: '*', presence: always, when: always }
+  - { name: '$device_id', events: '*', presence: always, when: always }
+  - {
+      name: '$user_id',
+      events: '*',
+      presence: sometimes,
+      when: { unknown: 'only sent after the host app calls identify(), not automatically at init' },
+    }
+  - {
+      name: 'utm_source',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'gclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - { name: 'current_page_title', events: ['$mp_web_page_view'], presence: always, when: always }
+  - { name: 'current_domain', events: ['$mp_web_page_view'], presence: always, when: always }
+  - { name: 'current_url_path', events: ['$mp_web_page_view'], presence: always, when: always }
+  - { name: 'current_url_protocol', events: ['$mp_web_page_view'], presence: always, when: always }
+  - { name: 'current_url_search', events: ['$mp_web_page_view'], presence: always, when: always }
+  - {
+      name: '$mp_autocapture',
+      events: ['$mp_click', '$mp_dead_click', '$mp_input_change', '$mp_rage_click', '$mp_submit'],
+      presence: always,
+      when: { option: 'autocapture', is: true },
+    }
+  - { name: 'token', events: '*', presence: always, when: always }
+  - {
+      name: 'utm_medium',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_campaign',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_content',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_term',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_id',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_source_platform',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_campaign_id',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_creative_format',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'utm_marketing_tactic',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'dclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'fbclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'ko_click_id',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'li_fat_id',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'msclkid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'sccid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'ttclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'twclid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+  - {
+      name: 'wbraid',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'track_marketing', not: false },
+    }
+personProperties: []

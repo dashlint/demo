@@ -1,0 +1,80 @@
+# Builtins of segment-analytics-next (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2); corrected by ADR-056
+# (notes/scripts/t44-builtins.mjs).
+sdk: segment-analytics-next
+events: []
+properties:
+  - {
+      name: 'path',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping",
+        },
+    }
+  - {
+      name: 'referrer',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping",
+        },
+    }
+  - {
+      name: 'search',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping",
+        },
+    }
+  - {
+      name: 'title',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping",
+        },
+    }
+  - {
+      name: 'url',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping",
+        },
+    }
+  - {
+      name: 'userAgent',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping",
+        },
+    }
+  - {
+      name: 'library',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping",
+        },
+    }
+  - {
+      name: 'campaign',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'depends on utm_ query params in the current page URL at call time, not an init option',
+        },
+    }
+personProperties: []

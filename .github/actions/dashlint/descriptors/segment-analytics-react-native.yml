@@ -1,0 +1,39 @@
+# @segment/analytics-react-native: Segment's React Native SDK (@segment/analytics-react-native
+# 2.24.2). createClient() returns a SegmentClient (lib/typescript/src/analytics.d.ts); the
+# useAnalytics() hook returns the ClientMethods object type (lib/typescript/src/types.d.ts,
+# lib/typescript/src/client.d.ts), whose destructured members resolve to its declarations.
+sdk: segment-analytics-react-native
+package: '@segment/analytics-react-native'
+versions: '>=2.0.0 <3.0.0'
+verified: 2.24.2
+declaredIn: ['@segment/analytics-react-native']
+platforms: [ios, android]
+calls:
+  # track(eventName, properties?, enrichment?): SegmentClient names the properties `options`.
+  - member: track
+    on: [SegmentClient, ClientMethods]
+    event: args[0]
+    properties: args[1]
+  - member: identify
+    on: [SegmentClient, ClientMethods]
+    identity: identify
+    personSet: args[1]
+  - member: reset
+    on: [SegmentClient, ClientMethods]
+    identity: reset
+  - hook: useAnalytics
+# createClient(config): trackAppLifecycleEvents and trackDeepLinks are read from the config
+# (src/constants.ts:9-10, both false by default).
+init:
+  - member: createClient
+    on: ['(module)']
+    options: args[0]
+builtins: builtins/segment-analytics-react-native.yml
+stub: stubs/segment-analytics-react-native.d.ts
+unknownNames:
+  # screen() calls have no event name of their own: each destination names them ($screen in
+  # PostHog, "Viewed <name> Screen" in others), so they are not sites in v0.1 (ADR-056).
+  events: [$, 'Loaded a ', 'Viewed ']
+  # Destinations map the event context to their own properties, PostHog's with a `$` (ADR-056).
+  properties: [$]
+  personProperties: [$]

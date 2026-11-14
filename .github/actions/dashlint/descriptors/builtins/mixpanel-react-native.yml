@@ -1,0 +1,34 @@
+# Builtins of mixpanel-react-native (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2).
+sdk: mixpanel-react-native
+events: []
+properties:
+  - { name: 'mp_lib', events: '*', presence: always, when: always }
+  - { name: '$lib_version', events: '*', presence: always, when: always }
+  - { name: '$os', events: '*', presence: always, when: always }
+  - { name: '$os_version', events: '*', presence: always, when: always }
+  - { name: 'token', events: '*', presence: always, when: always }
+  - { name: 'time', events: '*', presence: always, when: always }
+  - { name: 'distinct_id', events: '*', presence: always, when: always }
+  - { name: '$device_id', events: '*', presence: always, when: always }
+  - {
+      name: '$user_id',
+      events: '*',
+      presence: sometimes,
+      when:
+        { unknown: 'only populated after identify() sets a user id, not automatically at init' },
+    }
+  - {
+      name: '$manufacturer',
+      events: '*',
+      presence: sometimes,
+      when: { unknown: "only merged when Platform.OS === 'ios', not an init option" },
+    }
+  - {
+      name: '$android_brand',
+      events: '*',
+      presence: sometimes,
+      when: { unknown: "only merged when Platform.OS === 'android', not an init option" },
+    }
+personProperties: []

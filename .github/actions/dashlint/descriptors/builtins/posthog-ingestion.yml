@@ -1,0 +1,183 @@
+# What PostHog adds on ingestion, whatever the SDK sends (ADR-012, ADR-029): the GeoIP
+# transformation (template-geoip) that every new project gets enabled. A project can disable it,
+# and an event without $ip (IP discarding, cookieless mode) or with $geoip_disable skips it, so
+# every row is unknown: a tile on these names is not checked, never "never sent". $initial_geoip_*
+# person properties fall under the descriptors' $initial_ prefix (ADR-003). Written by
+# notes/scripts/t39-write-ingestion.mjs; every name is cited in notes/research/t39-ingestion.md.
+sdk: posthog
+events: []
+properties:
+  - name: '$geoip_city_name'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_country_name'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_country_code'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_continent_name'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_continent_code'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_postal_code'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_latitude'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_longitude'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_accuracy_radius'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_time_zone'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_1_code'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_1_name'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_2_code'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_2_name'
+    events: '*'
+    presence: sometimes
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+personProperties:
+  - name: '$geoip_city_name'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_city_confidence'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_2_name'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_2_code'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_1_name'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_subdivision_1_code'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_country_name'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_country_code'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_continent_name'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_continent_code'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_postal_code'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_latitude'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_longitude'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_accuracy_radius'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }
+  - name: '$geoip_time_zone'
+    when:
+      {
+        unknown: "added on ingestion by the project's GeoIP transformation, on by default; not added when the project disables it or the event has no $ip or sets $geoip_disable",
+      }

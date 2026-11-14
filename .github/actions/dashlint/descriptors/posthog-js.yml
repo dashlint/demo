@@ -1,0 +1,55 @@
+# posthog-js: the browser SDK. Every member below is declared in posthog-js 1.447.15
+# (dist/module.d.ts, class PostHog) and in @posthog/types 1.424.1 (dist/posthog.d.ts, interface
+# PostHog), which the class implements; the React hook in posthog-js/react.
+sdk: posthog-js
+package: posthog-js
+versions: '>=1.0.0 <2.0.0'
+verified: 1.447.15
+declaredIn: [posthog-js, '@posthog/types']
+platforms: [web]
+calls:
+  - member: capture
+    on: [PostHog]
+    event: args[0]
+    properties: args[1]
+  - member: register
+    on: [PostHog]
+    superProperties: args[0]
+  - member: register_once
+    on: [PostHog]
+    superProperties: args[0]
+  - member: identify
+    on: [PostHog]
+    identity: identify
+    personSet: args[1]
+    personSetOnce: args[2]
+  - member: setPersonProperties
+    on: [PostHog]
+    personSet: args[0]
+    personSetOnce: args[1]
+  # Deprecated people API: set(prop, to) takes an object or a property name and its value.
+  - member: set
+    on: [PostHog.people]
+    personSet: args[0]
+  - member: set_once
+    on: [PostHog.people]
+    personSetOnce: args[0]
+  - member: reset
+    on: [PostHog]
+    identity: reset
+  - hook: usePostHog
+# Init options for builtin conditions: posthog.init(token, config), or the React provider given
+# apiKey and options (react/dist/types/index.d.ts, PostHogProviderProps).
+init:
+  - member: init
+    on: [PostHog]
+    options: args[1]
+  - component: PostHogProvider
+    options: options
+builtins: builtins/posthog-js.yml
+# What PostHog adds on ingestion (GeoIP), whichever SDK sent the event (ADR-029).
+ingestion: builtins/posthog-ingestion.yml
+stub: stubs/posthog-js.d.ts
+unknownNames:
+  # $initial_* person properties are built by concatenation (ADR-003).
+  personProperties: [$initial_]

@@ -1,0 +1,29 @@
+name: dashlint
+description: Comments on pull requests that would break saved analytics dashboards and alerts
+branding:
+  icon: bar-chart-2
+  color: orange
+inputs:
+  config:
+    description: Path to the dashlint config file
+    default: dashlint.config.yml
+  base:
+    description: Base commit to diff against (empty uses the pull request's base commit)
+    default: ''
+  fail-on:
+    description: Severity that fails the job (empty uses the config's failOn)
+    default: ''
+  comment:
+    description: Post or update a PR comment with the result
+    default: 'true'
+  token:
+    description: Token used to fetch the base commit and post the PR comment
+    default: ${{ github.token }}
+outputs:
+  newly-broken:
+    description: Count of checks newly broken by this pull request
+  report-json:
+    description: Path to the JSON report
+runs:
+  using: node24
+  main: dist/action.mjs

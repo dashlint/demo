@@ -1,0 +1,120 @@
+# Builtins of posthog-react-native (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2).
+sdk: posthog-react-native
+events:
+  # captureScreens and captureTouches are keys of PostHogProvider's autocapture prop, not init options
+  # (dist/PostHogProvider.js:1), so code cannot decide them from the init call (ADR-027).
+  - {
+      name: '$screen',
+      when:
+        {
+          unknown: 'sent automatically only by PostHogProvider with autocapture.captureScreens (default true when the provider is used), not an init option',
+        },
+    }
+  - { name: 'Application Installed', when: { option: 'captureAppLifecycleEvents', not: false } }
+  - { name: 'Application Updated', when: { option: 'captureAppLifecycleEvents', not: false } }
+  - { name: 'Application Opened', when: { option: 'captureAppLifecycleEvents', not: false } }
+  - { name: 'Application Became Active', when: { option: 'captureAppLifecycleEvents', not: false } }
+  - { name: 'Application Backgrounded', when: { option: 'captureAppLifecycleEvents', not: false } }
+  - { name: '$identify', when: { option: 'personProfiles', not: 'never' } }
+  - { name: '$set', when: { option: 'personProfiles', not: 'never' } }
+  - { name: '$groupidentify', when: { option: 'personProfiles', not: 'never' } }
+  - { name: '$create_alias', when: { option: 'personProfiles', not: 'never' } }
+  - {
+      name: '$exception',
+      when:
+        {
+          unknown: 'needs errorTracking.autocapture in init options and the remote config flag autocaptureExceptions (default false)',
+        },
+    }
+  - {
+      name: '$autocapture',
+      when:
+        {
+          unknown: 'sent only by PostHogProvider with autocapture true or autocapture.captureTouches true, not an init option',
+        },
+    }
+properties:
+  - { name: '$screen_name', events: ['$screen'], presence: always, when: always }
+  - { name: '$os_name', events: '*', presence: always, when: always }
+  - { name: '$os_version', events: '*', presence: sometimes, when: always }
+  - {
+      name: '$app_version',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - {
+      name: '$app_build',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - {
+      name: '$app_name',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - {
+      name: '$app_namespace',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - { name: '$device_type', events: '*', presence: always, when: always }
+  - {
+      name: '$device_name',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - {
+      name: '$device_manufacturer',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - { name: '$screen_height', events: '*', presence: always, when: always }
+  - { name: '$screen_width', events: '*', presence: always, when: always }
+  - {
+      name: '$locale',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - {
+      name: '$timezone',
+      events: '*',
+      presence: sometimes,
+      when:
+        {
+          unknown: 'set only when an optional native module (expo-application, expo-device, expo-localization, react-native-device-info or react-native-localize) is installed',
+        },
+    }
+  - { name: '$lib', events: '*', presence: always, when: always }
+  - { name: '$lib_version', events: '*', presence: always, when: always }
+  - { name: '$session_id', events: '*', presence: always, when: always }
+personProperties: []

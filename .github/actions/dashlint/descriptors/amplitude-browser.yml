@@ -1,0 +1,72 @@
+# @amplitude/analytics-browser: the browser SDK. The default instance's members are module-level
+# consts in @amplitude/analytics-browser 2.49.2 (lib/esm/index.d.ts, container `(module)`, used
+# through `import * as amplitude` or named imports); a client from createInstance() is typed by
+# the CoreClient and Client interfaces of @amplitude/analytics-core 2.62.1
+# (lib/esm/types/client/core-client.d.ts); `new AmplitudeBrowser()` inherits from AmplitudeCore
+# (lib/esm/core-client.d.ts) and AmplitudeBrowserLite (lib/esm/browser-client-lite.d.ts).
+sdk: amplitude-browser
+package: '@amplitude/analytics-browser'
+versions: '>=2.0.0 <3.0.0'
+verified: 2.49.2
+declaredIn: ['@amplitude/analytics-browser', '@amplitude/analytics-core']
+platforms: [web]
+calls:
+  # track(eventInput: BaseEvent | string, eventProperties?, eventOptions?). Given an event object,
+  # the name is its event_type; eventProperties, when given, replaces its event_properties
+  # (analytics-core lib/esm/utils/event-builder.js:5), read here as a merge (ADR-055).
+  - member: track
+    on: ['(module)', CoreClient, AmplitudeCore]
+    event: args[0]
+    properties: args[1]
+    objectForm:
+      event: args[0].event_type
+      properties:
+        - args[0].event_properties
+        - args[1]
+  # logEvent is an alias of track (core-client.d.ts:141).
+  - member: logEvent
+    on: ['(module)', CoreClient, AmplitudeCore]
+    event: args[0]
+    properties: args[1]
+    objectForm:
+      event: args[0].event_type
+      properties:
+        - args[0].event_properties
+        - args[1]
+  # identify(identify: IIdentify) sends the operations built on an Identify object; the person
+  # properties are read from its set and setOnce calls below.
+  - member: identify
+    on: ['(module)', CoreClient, AmplitudeCore, AmplitudeBrowserLite]
+    identity: identify
+  - member: setUserId
+    on: ['(module)', Client, AmplitudeBrowserLite]
+    identity: identify
+  - member: reset
+    on: ['(module)', Client, AmplitudeBrowserLite]
+    identity: reset
+  # new Identify().set(property, value) and setOnce(property, value).
+  - member: set
+    on: [IIdentify, Identify]
+    personSet: args[0]
+  - member: setOnce
+    on: [IIdentify, Identify]
+    personSetOnce: args[0]
+# Init options for builtin conditions: init(apiKey, options) or init(apiKey, userId, options)
+# (analytics-core lib/esm/types/client/browser-client.d.ts:15-16): the last of the two the call
+# passes. init(apiKey, userId) alone leaves every option unknown.
+init:
+  - member: init
+    on: ['(module)', BrowserClient, AmplitudeBrowserLite]
+    options:
+      - args[1]
+      - args[2]
+builtins: builtins/amplitude-browser.yml
+stub: stubs/amplitude-browser.d.ts
+unknownNames:
+  # The SDK sends $identify, $groupidentify and revenue_amount for identify, groupIdentify and
+  # revenue calls (analytics-core lib/esm/types/event/event.d.ts:78), and builds more
+  # `[Amplitude] ...` autocapture names at runtime (frustration and network tracking) than V2
+  # could cite (ADR-055).
+  events: [$, revenue_amount, '[Amplitude]']
+  # Amplitude adds location and device fields on ingestion (ADR-055, uncited).
+  properties: ['[Amplitude]', city, region, country, dma, device_, os_]

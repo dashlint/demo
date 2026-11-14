@@ -1,0 +1,136 @@
+# Builtins of segment-analytics-react-native (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2); corrected by ADR-056
+# (notes/scripts/t44-builtins.mjs).
+sdk: segment-analytics-react-native
+events:
+  - { name: 'Application Installed', when: { option: 'trackAppLifecycleEvents', is: true } }
+  - { name: 'Application Updated', when: { option: 'trackAppLifecycleEvents', is: true } }
+  - { name: 'Application Opened', when: { option: 'trackAppLifecycleEvents', is: true } }
+  - { name: 'Application Backgrounded', when: { option: 'trackAppLifecycleEvents', is: true } }
+  - { name: 'Deep Link Opened', when: { option: 'trackDeepLinks', is: true } }
+properties:
+  - {
+      name: 'version',
+      events: ['Application Installed', 'Application Updated', 'Application Opened'],
+      presence: always,
+      when: { option: 'trackAppLifecycleEvents', is: true },
+    }
+  - {
+      name: 'build',
+      events: ['Application Installed', 'Application Updated', 'Application Opened'],
+      presence: always,
+      when: { option: 'trackAppLifecycleEvents', is: true },
+    }
+  - {
+      name: 'previous_version',
+      events: ['Application Updated'],
+      presence: always,
+      when: { option: 'trackAppLifecycleEvents', is: true },
+    }
+  - {
+      name: 'previous_build',
+      events: ['Application Updated'],
+      presence: always,
+      when: { option: 'trackAppLifecycleEvents', is: true },
+    }
+  - {
+      name: 'from_background',
+      events: ['Application Opened'],
+      presence: always,
+      when: { option: 'trackAppLifecycleEvents', is: true },
+    }
+  - {
+      name: 'url',
+      events: ['Deep Link Opened'],
+      presence: always,
+      when: { option: 'trackDeepLinks', is: true },
+    }
+  - {
+      name: 'referring_application',
+      events: ['Deep Link Opened'],
+      presence: always,
+      when: { option: 'trackDeepLinks', is: true },
+    }
+  - {
+      name: 'app',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'device',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'library',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'locale',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'network',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'os',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'screen',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'timezone',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+  - {
+      name: 'instanceId',
+      events: '*',
+      presence: always,
+      when:
+        {
+          unknown: "a context field, not in properties; it reaches a dashboard property only through the destination's mapping (src/context.ts:77-106)",
+        },
+    }
+personProperties: []

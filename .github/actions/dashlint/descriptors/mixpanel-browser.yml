@@ -1,0 +1,70 @@
+# mixpanel-browser: the browser SDK. Every member below is declared in mixpanel-browser 2.85.0
+# (src/index.d.ts) twice: on the Mixpanel interface, which the default export (OverridedMixpanel)
+# extends, and as a module-level function for namespace and named imports (container `(module)`,
+# ADR-054). track_pageview has no module-level function.
+sdk: mixpanel-browser
+package: mixpanel-browser
+versions: '>=2.0.0 <3.0.0'
+verified: 2.85.0
+declaredIn: [mixpanel-browser]
+platforms: [web]
+calls:
+  - member: track
+    on: [Mixpanel, '(module)']
+    event: args[0]
+    properties: args[1]
+  # The groups object's keys are written over the properties (src/mixpanel-core.js:1462).
+  - member: track_with_groups
+    on: [Mixpanel, '(module)']
+    event: args[0]
+    properties:
+      - args[1]
+      - args[2]
+  # track_links(query, event_name, properties) and track_forms(...) send the event on a click or
+  # a submit; properties may be a function of the element, which leaves them open.
+  - member: track_links
+    on: [Mixpanel, '(module)']
+    event: args[1]
+    properties: args[2]
+  - member: track_forms
+    on: [Mixpanel, '(module)']
+    event: args[1]
+    properties: args[2]
+  # The event is options.event_name or $mp_web_page_view (src/mixpanel-core.js:1553); a custom name
+  # is not read in v0.1 (ADR-054).
+  - member: track_pageview
+    on: [Mixpanel]
+    event: { literal: $mp_web_page_view }
+    properties: args[0]
+  - member: register
+    on: [Mixpanel, '(module)']
+    superProperties: args[0]
+  - member: register_once
+    on: [Mixpanel, '(module)']
+    superProperties: args[0]
+  - member: identify
+    on: [Mixpanel, '(module)']
+    identity: identify
+  - member: reset
+    on: [Mixpanel, '(module)']
+    identity: reset
+  # people.set(prop, to) takes an object or a property name and its value.
+  - member: set
+    on: [People]
+    personSet: args[0]
+  - member: set_once
+    on: [People]
+    personSetOnce: args[0]
+# Init options for builtin conditions: mixpanel.init(token, config, name?).
+init:
+  - member: init
+    on: [Mixpanel, OverridedMixpanel, '(module)']
+    options: args[1]
+builtins: builtins/mixpanel-browser.yml
+stub: stubs/mixpanel-browser.d.ts
+unknownNames:
+  # The SDK also sends $identify, $create_alias and $experiment_started on its own
+  # (src/mixpanel-core.js:1899, 2006; src/flags/index.js:717) with no init option to decide them.
+  events: [$]
+  # Mixpanel adds geolocation and $mp_ processing properties on ingestion (ADR-054, uncited).
+  properties: [$city, $region, mp_country_code, $mp_, mp_processing_time_ms]

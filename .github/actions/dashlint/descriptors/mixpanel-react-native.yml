@@ -1,0 +1,49 @@
+# mixpanel-react-native: the React Native SDK. Every member below is declared in
+# mixpanel-react-native 4.1.0 (index.d.ts, classes Mixpanel and People). The client is
+# `new Mixpanel(token, trackAutomaticEvents)` or `await Mixpanel.init(...)`; people calls go
+# through `getPeople()`.
+sdk: mixpanel-react-native
+package: mixpanel-react-native
+versions: '>=4.0.0 <5.0.0'
+verified: 4.1.0
+declaredIn: [mixpanel-react-native]
+platforms: [ios, android]
+calls:
+  - member: track
+    on: [Mixpanel]
+    event: args[0]
+    properties: args[1]
+  # The groups object's keys are spread over the properties (javascript/mixpanel-main.js:570).
+  - member: trackWithGroups
+    on: [Mixpanel]
+    event: args[0]
+    properties:
+      - args[1]
+      - args[2]
+  - member: registerSuperProperties
+    on: [Mixpanel]
+    superProperties: args[0]
+  - member: registerSuperPropertiesOnce
+    on: [Mixpanel]
+    superProperties: args[0]
+  - member: identify
+    on: [Mixpanel]
+    identity: identify
+  - member: reset
+    on: [Mixpanel]
+    identity: reset
+  # getPeople().set(prop, to) takes an object or a property name and its value.
+  - member: set
+    on: [People]
+    personSet: args[0]
+  - member: setOnce
+    on: [People]
+    personSetOnce: args[0]
+builtins: builtins/mixpanel-react-native.yml
+stub: stubs/mixpanel-react-native.d.ts
+unknownNames:
+  # The native iOS and Android SDKs send automatic events ($ae_first_open, $ae_session, ...) and
+  # device properties whose names are not in this package (research/v2-mixpanel.md), and Mixpanel
+  # adds geolocation on ingestion: names starting with $ or mp_ are never "not sent" (ADR-054).
+  events: [$]
+  properties: [$, mp_]

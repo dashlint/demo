@@ -1,0 +1,171 @@
+# Builtins of amplitude-react-native (spec 6.3.3, ADR-003): what the SDK sends by itself, each with the init
+# option that switches it, or `unknown` when code cannot decide. Every row is cited to the
+# published package source at the descriptor's verified version (V2); the option paths are
+# corrected from the source by ADR-055 (notes/scripts/t43-builtins.mjs).
+sdk: amplitude-react-native
+events:
+  - {
+      name: 'session_start',
+      when:
+        {
+          unknown: 'sent when trackingSessionEvents or autocapture.sessions is true (react-native-client.js:420); a condition reads one option',
+        },
+    }
+  - {
+      name: 'session_end',
+      when:
+        {
+          unknown: 'sent when trackingSessionEvents or autocapture.sessions is true (react-native-client.js:420); a condition reads one option',
+        },
+    }
+  - {
+      name: '[Amplitude] Application Opened',
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Element Interacted',
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Rage Click',
+      when: { option: 'autocapture.frustrationInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Application Backgrounded',
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Application Installed',
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Application Updated',
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Screen Viewed',
+      when:
+        {
+          unknown: "sent by explicit trackScreenView calls (the descriptor's screen entry), unless autocapture.screenViews is false",
+        },
+    }
+properties:
+  - {
+      name: 'platform',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.platform', not: false },
+    }
+  - {
+      name: 'os_name',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.osName', not: false },
+    }
+  - {
+      name: 'device_model',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.deviceModel', not: false },
+    }
+  - {
+      name: 'language',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.language', not: false },
+    }
+  - {
+      name: 'ip',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.ipAddress', not: false },
+    }
+  - {
+      name: 'android_app_set_id',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.appSetId', not: false },
+    }
+  - {
+      name: 'idfv',
+      events: '*',
+      presence: always,
+      when: { option: 'trackingOptions.idfv', not: false },
+    }
+  - {
+      name: 'country',
+      events: '*',
+      presence: sometimes,
+      when: { option: 'trackingOptions.country', is: true },
+    }
+  - {
+      name: '[Amplitude] Version',
+      events: ['[Amplitude] Application Installed', '[Amplitude] Application Updated'],
+      presence: sometimes,
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Build',
+      events: ['[Amplitude] Application Installed', '[Amplitude] Application Updated'],
+      presence: sometimes,
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Previous Version',
+      events: ['[Amplitude] Application Updated'],
+      presence: sometimes,
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Previous Build',
+      events: ['[Amplitude] Application Updated'],
+      presence: sometimes,
+      when: { option: 'autocapture.appLifecycles', is: true },
+    }
+  - {
+      name: '[Amplitude] Screen Name',
+      events: ['[Amplitude] Screen Viewed'],
+      presence: always,
+      when:
+        {
+          unknown: "sent by explicit trackScreenView calls (the descriptor's screen entry), unless autocapture.screenViews is false",
+        },
+    }
+  - {
+      name: '[Amplitude] Target Accessibility Label',
+      events: ['[Amplitude] Element Interacted'],
+      presence: sometimes,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Action',
+      events: ['[Amplitude] Element Interacted'],
+      presence: sometimes,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Target Component',
+      events: ['[Amplitude] Element Interacted'],
+      presence: sometimes,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Target Element',
+      events: ['[Amplitude] Element Interacted'],
+      presence: sometimes,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+  - {
+      name: '[Amplitude] Target Test ID',
+      events: ['[Amplitude] Element Interacted'],
+      presence: sometimes,
+      when: { option: 'autocapture.elementInteractions', is: true },
+    }
+personProperties:
+  - {
+      name: 'utm_source',
+      when:
+        {
+          unknown: 'attribution runs via CampaignTracker only when isNative is false, and isNative is true on every real iOS or Android device, so this path is skipped at runtime rather than gated by any static init option',
+        },
+    }
