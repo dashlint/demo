@@ -1,0 +1,26 @@
+name: refresh
+
+# Manual only: pulls a fresh dashlint.requirements.json snapshot from this repository's PostHog
+# project and opens no PR by itself (review the diff, then commit by hand). Needs a repository
+# secret DASHLINT_POSTHOG_KEY holding a personal API key with the read-only definition scopes for
+# this project; that key is never committed and never set by anything in this repository, only by
+# whoever owns the fork's secrets.
+on:
+  workflow_dispatch:
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: npx dashlint pull
+        env:
+          DASHLINT_POSTHOG_KEY: ${{ secrets.DASHLINT_POSTHOG_KEY }}
+      - run: git diff --stat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dashlint.requirements.json
+          path: dashlint.requirements.json

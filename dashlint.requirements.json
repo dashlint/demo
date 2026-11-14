@@ -1,0 +1,1299 @@
+{
+  "schema": "dashlint.requirements/1",
+  "source": {
+    "platform": "posthog",
+    "host": "https://us.posthog.com",
+    "project": 731105,
+    "pulledAt": "2026-11-14T02:20:10Z",
+    "tool": "0.0.0",
+    "profile": "posthog"
+  },
+  "dashboards": [
+    {
+      "id": "dashboard:2345468",
+      "name": "Bookshop growth",
+      "filters": []
+    },
+    {
+      "id": "dashboard:2345469",
+      "name": "Checkout",
+      "filters": []
+    },
+    {
+      "id": "dashboard:2345470",
+      "name": "Mobile",
+      "filters": []
+    }
+  ],
+  "tiles": [
+    {
+      "id": "insight:3Qbbx3b3",
+      "title": "Average order value (mobile)",
+      "url": "https://us.posthog.com/project/731105/insights/3Qbbx3b3",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "order_completed_native",
+          "math": "avg",
+          "mathProperty": {
+            "key": "total",
+            "scope": "event"
+          },
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:4hNDTQmF",
+      "title": "Orders by format",
+      "url": "https://us.posthog.com/project/731105/insights/4hNDTQmF",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "order_completed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [
+        {
+          "key": "format",
+          "scope": "event"
+        }
+      ],
+      "notChecked": []
+    },
+    {
+      "id": "insight:63vha18o",
+      "title": "Checkout funnel (web)",
+      "url": "https://us.posthog.com/project/731105/insights/63vha18o",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "funnels",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "checkout_started",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "B",
+          "node": "event",
+          "event": "order_completed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "filters": [],
+      "breakdown": [],
+      "exclusions": [],
+      "funnelVizType": "steps",
+      "notChecked": []
+    },
+    {
+      "id": "insight:7Thw3hGA",
+      "title": "Browse to cart",
+      "url": "https://us.posthog.com/project/731105/insights/7Thw3hGA",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "funnels",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "book_viewed",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "B",
+          "node": "event",
+          "event": "added_to_cart",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "filters": [],
+      "breakdown": [],
+      "exclusions": [],
+      "funnelVizType": "steps",
+      "notChecked": []
+    },
+    {
+      "id": "insight:8o2c555i",
+      "title": "Book views by genre",
+      "url": "https://us.posthog.com/project/731105/insights/8o2c555i",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "book_viewed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [
+        {
+          "key": "genre",
+          "scope": "event",
+          "op": "exact",
+          "values": [
+            "mystery"
+          ]
+        }
+      ],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:9atqyQwr",
+      "title": "Added to cart (mobile)",
+      "url": "https://us.posthog.com/project/731105/insights/9atqyQwr",
+      "dashboards": [
+        "dashboard:2345470"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "added_to_cart_native",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:AEaBraEi",
+      "title": "Revenue per device",
+      "url": "https://us.posthog.com/project/731105/insights/AEaBraEi",
+      "dashboards": [
+        "dashboard:2345470"
+      ],
+      "kind": "sql",
+      "notChecked": [
+        {
+          "reason": "query kind HogQLQuery is not checked"
+        }
+      ]
+    },
+    {
+      "id": "insight:BU2riHDh",
+      "title": "Wishlist synced (mobile)",
+      "url": "https://us.posthog.com/project/731105/insights/BU2riHDh",
+      "dashboards": [
+        "dashboard:2345470"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "wishlist_synced",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:BdPNF7uV",
+      "title": "Orders completed (mobile)",
+      "url": "https://us.posthog.com/project/731105/insights/BdPNF7uV",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "order_completed_native",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:BsOf7Rvv",
+      "title": "Orders completed (web)",
+      "url": "https://us.posthog.com/project/731105/insights/BsOf7Rvv",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "order_completed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:C2iYOtIJ",
+      "title": "Payment method selected",
+      "url": "https://us.posthog.com/project/731105/insights/C2iYOtIJ",
+      "dashboards": [
+        "dashboard:2345470"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "payment_method_selected",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:CK9NsL46",
+      "title": "Checkouts started (all platforms)",
+      "url": "https://us.posthog.com/project/731105/insights/CK9NsL46",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "checkout_started",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:EFjT2ILD",
+      "title": "Checkout funnel health",
+      "url": "https://us.posthog.com/project/731105/insights/EFjT2ILD",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "checkout_started",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "B",
+          "node": "event",
+          "event": "order_completed",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "C",
+          "node": "event",
+          "event": "added_to_cart",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [
+        {
+          "index": 0,
+          "expression": "B/A",
+          "refs": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:H98PFED0",
+      "title": "Discount conversion",
+      "url": "https://us.posthog.com/project/731105/insights/H98PFED0",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "checkout_started",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "B",
+          "node": "event",
+          "event": "discount_applied",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [
+        {
+          "index": 0,
+          "expression": "B/A",
+          "refs": [
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:HaZhYulJ",
+      "title": "Checkout funnel (by payment method)",
+      "url": "https://us.posthog.com/project/731105/insights/HaZhYulJ",
+      "dashboards": [
+        "dashboard:2345469"
+      ],
+      "kind": "funnels",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "checkout_started",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "B",
+          "node": "event",
+          "event": "payment_method_selected",
+          "math": "total",
+          "filters": [
+            {
+              "key": "payment_method",
+              "scope": "event",
+              "op": "exact",
+              "values": [
+                "Card"
+              ]
+            }
+          ]
+        },
+        {
+          "ref": "C",
+          "node": "event",
+          "event": "order_completed_native",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "filters": [],
+      "breakdown": [],
+      "exclusions": [],
+      "funnelVizType": "steps",
+      "notChecked": []
+    },
+    {
+      "id": "insight:JgY7SDpt",
+      "title": "Weekly active users",
+      "url": "https://us.posthog.com/project/731105/insights/JgY7SDpt",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "all-events",
+          "math": "weekly_active",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:LAE3dlyX",
+      "title": "Review submissions",
+      "url": "https://us.posthog.com/project/731105/insights/LAE3dlyX",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "review_submitted",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:NHHE9ZhV",
+      "title": "App opened funnel",
+      "url": "https://us.posthog.com/project/731105/insights/NHHE9ZhV",
+      "dashboards": [
+        "dashboard:2345470"
+      ],
+      "kind": "funnels",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "Application Opened",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "B",
+          "node": "event",
+          "event": "Application Became Active",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "filters": [],
+      "breakdown": [],
+      "exclusions": [],
+      "funnelVizType": "steps",
+      "notChecked": []
+    },
+    {
+      "id": "insight:NzQhUkoX",
+      "title": "Added to cart (web)",
+      "url": "https://us.posthog.com/project/731105/insights/NzQhUkoX",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "added_to_cart",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:QOThCvP8",
+      "title": "v4 spike: v4_daily",
+      "url": "https://us.posthog.com/project/731105/insights/QOThCvP8",
+      "dashboards": [],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-14d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "v4_daily",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:QWZpfytG",
+      "title": "Checkouts started",
+      "url": "https://us.posthog.com/project/731105/insights/QWZpfytG",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "checkout_started",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:SFgJNhZk",
+      "title": "Books viewed",
+      "url": "https://us.posthog.com/project/731105/insights/SFgJNhZk",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "book_viewed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:SkZbqbBJ",
+      "title": "Wishlist adds (current and legacy)",
+      "url": "https://us.posthog.com/project/731105/insights/SkZbqbBJ",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "group",
+          "operator": "OR",
+          "events": [
+            {
+              "event": "wishlist_added",
+              "filters": []
+            },
+            {
+              "event": "wishlist_synced",
+              "filters": []
+            },
+            {
+              "event": "wishlist_added_legacy",
+              "filters": []
+            }
+          ],
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:TAMq79Jq",
+      "title": "Shares via email",
+      "url": "https://us.posthog.com/project/731105/insights/TAMq79Jq",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "shared_via_email",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:UcYLZY3g",
+      "title": "Gift card redemptions",
+      "url": "https://us.posthog.com/project/731105/insights/UcYLZY3g",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "gift_card_redeemed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:VzMJ7K3c",
+      "title": "Daily active users",
+      "url": "https://us.posthog.com/project/731105/insights/VzMJ7K3c",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "all-events",
+          "math": "dau",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:aTWqBToU",
+      "title": "Revenue (web)",
+      "url": "https://us.posthog.com/project/731105/insights/aTWqBToU",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "order_completed",
+          "math": "sum",
+          "mathProperty": {
+            "key": "total",
+            "scope": "event"
+          },
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:c02EGVkO",
+      "title": "Cart to order",
+      "url": "https://us.posthog.com/project/731105/insights/c02EGVkO",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "funnels",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "added_to_cart",
+          "math": "total",
+          "filters": []
+        },
+        {
+          "ref": "B",
+          "node": "event",
+          "event": "order_completed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "filters": [],
+      "breakdown": [],
+      "exclusions": [],
+      "funnelVizType": "steps",
+      "notChecked": []
+    },
+    {
+      "id": "insight:crlmpqqL",
+      "title": "Newsletter signups",
+      "url": "https://us.posthog.com/project/731105/insights/crlmpqqL",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "newsletter_signup",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:e5B0L8uS",
+      "title": "Book returns",
+      "url": "https://us.posthog.com/project/731105/insights/e5B0L8uS",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "book_returned",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:enmHMgmF",
+      "title": "Added to cart (any platform)",
+      "url": "https://us.posthog.com/project/731105/insights/enmHMgmF",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "action",
+          "action": {
+            "id": 473916,
+            "name": "Added to cart (any platform)",
+            "steps": [
+              {
+                "event": "added_to_cart",
+                "filters": []
+              },
+              {
+                "event": "added_to_cart_native",
+                "filters": []
+              }
+            ]
+          },
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:jneGS09T",
+      "title": "Orders excluding gift wrap",
+      "url": "https://us.posthog.com/project/731105/insights/jneGS09T",
+      "dashboards": [
+        "dashboard:2345470"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "order_completed_native",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [
+        {
+          "key": "gift_wrap",
+          "scope": "event",
+          "op": "is_not",
+          "values": [
+            "false"
+          ]
+        }
+      ],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:yQjURXwH",
+      "title": "Searches performed",
+      "url": "https://us.posthog.com/project/731105/insights/yQjURXwH",
+      "dashboards": [
+        "dashboard:2345468"
+      ],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-30d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "search_performed",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    },
+    {
+      "id": "insight:yZ72rtTN",
+      "title": "v4 spike: v4_never_sent",
+      "url": "https://us.posthog.com/project/731105/insights/yZ72rtTN",
+      "dashboards": [],
+      "kind": "trends",
+      "dateRange": {
+        "from": "-14d",
+        "to": null
+      },
+      "testAccountFilter": false,
+      "series": [
+        {
+          "ref": "A",
+          "node": "event",
+          "event": "v4_never_sent",
+          "math": "total",
+          "filters": []
+        }
+      ],
+      "formulas": [],
+      "filters": [],
+      "breakdown": [],
+      "notChecked": []
+    }
+  ],
+  "alerts": [
+    {
+      "id": "alert:01a1d113-0364-0000-9cc6-e4f5f62de20a",
+      "name": "v4 spike: never-sent relative decrease",
+      "target": {
+        "kind": "series",
+        "index": 0
+      },
+      "tile": "insight:yZ72rtTN",
+      "condition": "relative_decrease",
+      "bounds": {
+        "lower": false,
+        "upper": true
+      },
+      "interval": "hourly",
+      "enabled": true,
+      "state": "Not firing"
+    },
+    {
+      "id": "alert:01a1d113-0615-0000-7f79-490bd7e5708d",
+      "name": "v4 spike: never-sent absolute lower",
+      "target": {
+        "kind": "series",
+        "index": 0
+      },
+      "tile": "insight:yZ72rtTN",
+      "condition": "absolute_value",
+      "bounds": {
+        "lower": true,
+        "upper": false
+      },
+      "interval": "hourly",
+      "enabled": true,
+      "state": "Firing"
+    },
+    {
+      "id": "alert:01a1d113-090b-0000-973c-796965872c81",
+      "name": "v4 spike: never-sent absolute upper",
+      "target": {
+        "kind": "series",
+        "index": 0
+      },
+      "tile": "insight:yZ72rtTN",
+      "condition": "absolute_value",
+      "bounds": {
+        "lower": false,
+        "upper": true
+      },
+      "interval": "hourly",
+      "enabled": true,
+      "state": "Not firing"
+    },
+    {
+      "id": "alert:01a1d113-0bd3-0000-f7ec-86727914d727",
+      "name": "v4 spike: daily relative decrease",
+      "target": {
+        "kind": "series",
+        "index": 0
+      },
+      "tile": "insight:QOThCvP8",
+      "condition": "relative_decrease",
+      "bounds": {
+        "lower": false,
+        "upper": true
+      },
+      "interval": "hourly",
+      "enabled": true,
+      "state": "Not firing"
+    },
+    {
+      "id": "alert:01a1d1ea-568a-0000-86fd-eb6fcf680b0a",
+      "name": "Checkout funnel health",
+      "target": {
+        "kind": "formula",
+        "index": 2
+      },
+      "tile": "insight:EFjT2ILD",
+      "condition": "relative_decrease",
+      "bounds": {
+        "lower": false,
+        "upper": true
+      },
+      "interval": "hourly",
+      "enabled": false,
+      "state": "Errored"
+    }
+  ],
+  "observed": {
+    "windowDays": 30,
+    "events": {
+      "Application Became Active": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:19.671118Z",
+        "enforcement": "allow"
+      },
+      "Application Opened": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:15.322646Z",
+        "enforcement": "allow"
+      },
+      "added_to_cart": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:22.771933Z",
+        "enforcement": "allow"
+      },
+      "added_to_cart_native": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:20.224557Z",
+        "enforcement": "allow"
+      },
+      "book_returned": {
+        "defined": false
+      },
+      "book_viewed": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:20.446570Z",
+        "enforcement": "allow"
+      },
+      "checkout_started": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:15.161461Z",
+        "enforcement": "allow"
+      },
+      "discount_applied": {
+        "defined": false
+      },
+      "gift_card_redeemed": {
+        "defined": false
+      },
+      "newsletter_signup": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:22.441063Z",
+        "enforcement": "allow"
+      },
+      "order_completed": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:15.322646Z",
+        "enforcement": "allow"
+      },
+      "order_completed_native": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:19.089227Z",
+        "enforcement": "allow"
+      },
+      "payment_method_selected": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:15.322646Z",
+        "enforcement": "allow"
+      },
+      "review_submitted": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:24.587333Z",
+        "enforcement": "allow"
+      },
+      "search_performed": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:15.161461Z",
+        "enforcement": "allow"
+      },
+      "shared_via_email": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:20.224557Z",
+        "enforcement": "allow"
+      },
+      "v4_daily": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:19.934911Z",
+        "enforcement": "allow"
+      },
+      "v4_never_sent": {
+        "defined": false
+      },
+      "wishlist_added": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:19.089227Z",
+        "enforcement": "allow"
+      },
+      "wishlist_added_legacy": {
+        "defined": false
+      },
+      "wishlist_synced": {
+        "defined": true,
+        "lastSeenAt": "2026-11-13T10:37:19.671118Z",
+        "enforcement": "allow"
+      }
+    },
+    "eventProperties": {
+      "book_viewed": {
+        "seen": [],
+        "notSeen": [
+          "genre"
+        ]
+      },
+      "order_completed": {
+        "seen": [
+          "total"
+        ],
+        "notSeen": [
+          "format"
+        ]
+      },
+      "order_completed_native": {
+        "seen": [
+          "total"
+        ],
+        "notSeen": [
+          "gift_wrap"
+        ]
+      },
+      "payment_method_selected": {
+        "seen": [
+          "payment_method"
+        ],
+        "notSeen": []
+      }
+    }
+  }
+}

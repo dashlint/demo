@@ -1,0 +1,16 @@
+version: 1
+requirements: dashlint.requirements.json
+platforms:
+  posthog:
+    host: https://us.posthog.com
+    project: 731105
+    key: env:DASHLINT_POSTHOG_KEY
+    observedDays: 30
+sources:
+  - name: web
+    path: web
+    platform: web
+  - name: mobile
+    path: mobile
+    platform: [ios, android]
+failOn: dead
