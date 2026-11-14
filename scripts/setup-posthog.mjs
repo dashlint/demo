@@ -1,12 +1,11 @@
 // T9.3, T9.5: idempotently create the demo project's insights, dashboards, action and alerts, bring
-// existing insights to their wanted query, and retire PostHog's starter dashboard.
+// existing insights to their wanted query, and retire PostHog's starter dashboard and the V4 spike.
 //   node runner/with-key.mjs dashlint-posthog-demo-write -- node demo/scripts/setup-posthog.mjs --service dashlint-posthog-demo-write
 //
 // Objects are matched by name, so a second run changes nothing (CREATED 0 UPDATED 0 RETIRED 0). Refuses (exit 1) unless
 // the key is the demo write key (same fingerprint check as scripts/v4-spike.mjs: insights readable,
-// event_definitions refused for a missing scope). Never touches the production project (G13) and
-// never touches the 4 V4-spike alerts (ADR-005, ADR-009): only 1 new alert fits the free plan's
-// 5-alert budget while they exist, so the other 3 stay pending until T0.7 has read them.
+// event_definitions refused for a missing scope). Never touches the production project (G13). An
+// alert that does not fit the free plan's 5-alert budget is reported pending, not forced.
 //
 // Patterns reference spec section 6.17.1's numbering; each insight and the one action and one alert
 // below exist to make one or more of those 16 patterns real and checkable, plus plain filler
@@ -133,11 +132,22 @@ const ALERTS = [
   { name: 'Gift card redemptions below one', insight: 'Gift card redemptions', condition: 'absolute_value', bounds: { lower: 1 }, series_index: 0 },
   { name: 'Web orders below one', insight: 'Orders completed (web)', condition: 'absolute_value', bounds: { lower: 1 }, series_index: 0 },
 ];
-const FREE_PLAN_ALERT_LIMIT = 5; // research/posthog-limits.md (D5); ADR-009 keeps the 4 V4-spike alerts untouched.
+const FREE_PLAN_ALERT_LIMIT = 5; // research/posthog-limits.md (D5)
 
 // PostHog creates this dashboard (and its 9 insights) in every new project; the demo's dashboards
 // are the three above (spec 6.17.1), so setup moves it to PostHog's trash (soft delete, restorable).
 const RETIRED_DASHBOARDS = ['Your starter dashboard'];
+
+// The V4 spike (T0.6) held 4 of the 5 alert slots until T0.7 had read their states. With that
+// reading recorded, setup deletes the spike alerts and moves their two insights to the trash, so the
+// 3 alerts above can exist and the project holds only the demo's own objects.
+const RETIRED_ALERTS = [
+  'v4 spike: never-sent relative decrease',
+  'v4 spike: never-sent absolute lower',
+  'v4 spike: never-sent absolute upper',
+  'v4 spike: daily relative decrease',
+];
+const RETIRED_INSIGHTS = ['v4 spike: v4_never_sent', 'v4 spike: v4_daily'];
 
 // true when every key of `want` is in `have` with an equal value (PostHog adds defaults on save).
 function covers(have, want) {
@@ -228,9 +238,37 @@ for (const want of INSIGHTS) {
   record.insights.push({ name: want.name, id: found.id, dash: want.dash });
 }
 
-// 4. Alerts, while the free plan's budget has room (ADR-009: the 4 V4-spike alerts hold 4 of 5 slots
-// until T0.7 has read them).
-const existingAlerts = await listAll('alerts/?limit=100');
+// 4. Retire the V4-spike alerts and their insights, then create the alerts while the free plan's
+// budget has room.
+let retired = 0;
+const existingAlerts = [];
+for (const a of await listAll('alerts/?limit=100')) {
+  if (!RETIRED_ALERTS.includes(a.name)) {
+    existingAlerts.push(a);
+    continue;
+  }
+  const r = await api('DELETE', `alerts/${a.id}/`);
+  if (r.status === 204) {
+    retired++;
+    console.log(`alert ${a.name}: retired`);
+  } else {
+    existingAlerts.push(a);
+    failed++;
+    console.log(`alert ${a.name}: DELETE -> HTTP ${r.status} ${JSON.stringify(r.json).slice(0, 300)}`);
+  }
+}
+for (const name of RETIRED_INSIGHTS) {
+  const found = existingInsights.find((i) => i.name === name && !i.deleted);
+  if (!found) continue;
+  const r = await api('PATCH', `insights/${found.id}/`, { deleted: true });
+  if (r.status === 200) {
+    retired++;
+    console.log(`insight ${name}: retired`);
+  } else {
+    failed++;
+    console.log(`insight ${name}: PATCH -> HTTP ${r.status} ${JSON.stringify(r.json).slice(0, 300)}`);
+  }
+}
 let alertCount = existingAlerts.length;
 for (const ALERT of ALERTS) {
 const alertFound = existingAlerts.find((a) => a.name === ALERT.name);
@@ -288,7 +326,6 @@ for (const want of INSIGHTS) {
 }
 
 // 6. Retire PostHog's starter dashboard and the insights that live only on it.
-let retired = 0;
 for (const name of RETIRED_DASHBOARDS) {
   const d = existingDashboards.find((x) => x.name === name && !x.deleted);
   if (!d) continue;

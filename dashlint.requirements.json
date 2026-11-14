@@ -4,7 +4,7 @@
     "platform": "posthog",
     "host": "https://us.posthog.com",
     "project": 731105,
-    "pulledAt": "2026-11-14T02:20:10Z",
+    "pulledAt": "2026-11-14T03:48:29Z",
     "tool": "0.0.0",
     "profile": "posthog"
   },
@@ -631,31 +631,6 @@
       "notChecked": []
     },
     {
-      "id": "insight:QOThCvP8",
-      "title": "v4 spike: v4_daily",
-      "url": "https://us.posthog.com/project/731105/insights/QOThCvP8",
-      "dashboards": [],
-      "kind": "trends",
-      "dateRange": {
-        "from": "-14d",
-        "to": null
-      },
-      "testAccountFilter": false,
-      "series": [
-        {
-          "ref": "A",
-          "node": "event",
-          "event": "v4_daily",
-          "math": "total",
-          "filters": []
-        }
-      ],
-      "formulas": [],
-      "filters": [],
-      "breakdown": [],
-      "notChecked": []
-    },
-    {
       "id": "insight:QWZpfytG",
       "title": "Checkouts started",
       "url": "https://us.posthog.com/project/731105/insights/QWZpfytG",
@@ -1052,102 +1027,9 @@
       "filters": [],
       "breakdown": [],
       "notChecked": []
-    },
-    {
-      "id": "insight:yZ72rtTN",
-      "title": "v4 spike: v4_never_sent",
-      "url": "https://us.posthog.com/project/731105/insights/yZ72rtTN",
-      "dashboards": [],
-      "kind": "trends",
-      "dateRange": {
-        "from": "-14d",
-        "to": null
-      },
-      "testAccountFilter": false,
-      "series": [
-        {
-          "ref": "A",
-          "node": "event",
-          "event": "v4_never_sent",
-          "math": "total",
-          "filters": []
-        }
-      ],
-      "formulas": [],
-      "filters": [],
-      "breakdown": [],
-      "notChecked": []
     }
   ],
   "alerts": [
-    {
-      "id": "alert:01a1d113-0364-0000-9cc6-e4f5f62de20a",
-      "name": "v4 spike: never-sent relative decrease",
-      "target": {
-        "kind": "series",
-        "index": 0
-      },
-      "tile": "insight:yZ72rtTN",
-      "condition": "relative_decrease",
-      "bounds": {
-        "lower": false,
-        "upper": true
-      },
-      "interval": "hourly",
-      "enabled": true,
-      "state": "Not firing"
-    },
-    {
-      "id": "alert:01a1d113-0615-0000-7f79-490bd7e5708d",
-      "name": "v4 spike: never-sent absolute lower",
-      "target": {
-        "kind": "series",
-        "index": 0
-      },
-      "tile": "insight:yZ72rtTN",
-      "condition": "absolute_value",
-      "bounds": {
-        "lower": true,
-        "upper": false
-      },
-      "interval": "hourly",
-      "enabled": true,
-      "state": "Firing"
-    },
-    {
-      "id": "alert:01a1d113-090b-0000-973c-796965872c81",
-      "name": "v4 spike: never-sent absolute upper",
-      "target": {
-        "kind": "series",
-        "index": 0
-      },
-      "tile": "insight:yZ72rtTN",
-      "condition": "absolute_value",
-      "bounds": {
-        "lower": false,
-        "upper": true
-      },
-      "interval": "hourly",
-      "enabled": true,
-      "state": "Not firing"
-    },
-    {
-      "id": "alert:01a1d113-0bd3-0000-f7ec-86727914d727",
-      "name": "v4 spike: daily relative decrease",
-      "target": {
-        "kind": "series",
-        "index": 0
-      },
-      "tile": "insight:QOThCvP8",
-      "condition": "relative_decrease",
-      "bounds": {
-        "lower": false,
-        "upper": true
-      },
-      "interval": "hourly",
-      "enabled": true,
-      "state": "Not firing"
-    },
     {
       "id": "alert:01a1d1ea-568a-0000-86fd-eb6fcf680b0a",
       "name": "Checkout funnel health",
@@ -1164,6 +1046,57 @@
       "interval": "hourly",
       "enabled": false,
       "state": "Errored"
+    },
+    {
+      "id": "alert:01a1d82b-2422-0000-425a-20dc7c8137d8",
+      "name": "Gift card redemptions dropped",
+      "target": {
+        "kind": "series",
+        "index": 0
+      },
+      "tile": "insight:UcYLZY3g",
+      "condition": "relative_decrease",
+      "bounds": {
+        "lower": false,
+        "upper": true
+      },
+      "interval": "hourly",
+      "enabled": true,
+      "state": "Not firing"
+    },
+    {
+      "id": "alert:01a1d82b-2678-0000-2a64-e3b93f578951",
+      "name": "Gift card redemptions below one",
+      "target": {
+        "kind": "series",
+        "index": 0
+      },
+      "tile": "insight:UcYLZY3g",
+      "condition": "absolute_value",
+      "bounds": {
+        "lower": true,
+        "upper": false
+      },
+      "interval": "hourly",
+      "enabled": true,
+      "state": "Firing"
+    },
+    {
+      "id": "alert:01a1d82b-28dc-0000-1a8f-d7e8de2e5650",
+      "name": "Web orders below one",
+      "target": {
+        "kind": "series",
+        "index": 0
+      },
+      "tile": "insight:BsOf7Rvv",
+      "condition": "absolute_value",
+      "bounds": {
+        "lower": true,
+        "upper": false
+      },
+      "interval": "hourly",
+      "enabled": true,
+      "state": "Not firing"
     }
   ],
   "observed": {
@@ -1242,14 +1175,6 @@
         "defined": true,
         "lastSeenAt": "2026-11-13T10:37:20.224557Z",
         "enforcement": "allow"
-      },
-      "v4_daily": {
-        "defined": true,
-        "lastSeenAt": "2026-11-13T10:37:19.934911Z",
-        "enforcement": "allow"
-      },
-      "v4_never_sent": {
-        "defined": false
       },
       "wishlist_added": {
         "defined": true,
