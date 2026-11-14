@@ -35,7 +35,7 @@ function App() {
     // dashlint-demo pattern 7: the launch discount was retired and its "discount_applied" call
     // was deleted from this function. The "Discount conversion" tile still divides by a series
     // built on that event, so its formula can only ever be zero: dead.
-    track('checkout_started', { cart_total: total, item_count: cart.length })
+    track('checkout_begun', { cart_total: total, item_count: cart.length })
   }
 
   function completeOrder() {
