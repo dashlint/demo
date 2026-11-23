@@ -17,7 +17,7 @@ Clone this repository and run dashlint against the committed snapshot, no PostHo
 needed:
 
 ```sh
-npx dashlint audit --offline
+npx @dashlint/cli audit --offline
 ```
 
 This prints the text report and writes `dashlint-report.html`; it exits 1 because this demo has
