@@ -15,7 +15,7 @@ type ShopEventName =
   | 'book_viewed'
   | 'search_performed'
   | 'added_to_cart'
-  | 'checkout_started'
+  | 'checkout_begun'
   | 'order_completed'
   | 'review_submitted'
   | 'wishlist_added'
