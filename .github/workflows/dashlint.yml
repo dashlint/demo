@@ -9,5 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # A vendored copy of dashlint/action while the repos are private; dashlint/action@v0 after.
-      - uses: ./.github/actions/dashlint
+      - uses: dashlint/action@v0
