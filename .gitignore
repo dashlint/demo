@@ -1,6 +1,5 @@
 node_modules/
 dist/
-!.github/actions/dashlint/dist/
 .env
 .env.local
 *.log
