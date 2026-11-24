@@ -20,7 +20,7 @@ function App() {
   }
 
   function viewBook(book: Book) {
-    // dashlint-demo pattern 2: the code names this property "genre_id", not "genre"; a
+    // dashlint-demo pattern 2: the code names this property "genre_id", not "genre"; a (no tracking change)
     // dashboard filter written against "genre" never matches a real event.
     track('book_viewed', { book_id: book.id, genre_id: book.genreId, price: book.price })
   }
