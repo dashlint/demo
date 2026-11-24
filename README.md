@@ -17,11 +17,8 @@ Clone this repository and run dashlint against the committed snapshot, no PostHo
 needed:
 
 ```sh
-npx dashlint audit --offline
+npx @dashlint/cli audit --offline
 ```
-
-(Before `dashlint` is published to npm, clone `dashlint/dashlint` alongside this repository, run
-`npm run build` there, and use `node ../dashlint/dist/cli/main.js audit --offline` instead.)
 
 This prints the text report and writes `dashlint-report.html`; it exits 1 because this demo has
 seeded dead tiles on purpose. A clean result means nothing dashlint can see is broken, not that
@@ -37,7 +34,5 @@ every number is right.
   path above reads; `.github/workflows/refresh.yml` documents how to pull a fresh one
 
 By Aman Gupta.
-
-This repository is under active development and not yet ready for use.
 
 A clean result means nothing dashlint can see is broken, not that every number is right.
