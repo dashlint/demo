@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - run: npx dashlint pull
+      - run: npx @dashlint/cli pull
         env:
           DASHLINT_POSTHOG_KEY: ${{ secrets.DASHLINT_POSTHOG_KEY }}
       - run: git diff --stat
