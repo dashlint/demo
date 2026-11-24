@@ -10,4 +10,4 @@
 | | Trend "Checkouts started" (dead, was one platform) |
 
 Checked against `dashlint.requirements.json` (pulled 2026-11-14). 3 tiles were already dead before this PR. 1 call site has non-literal event names. 1 part could not be decided.
-<sub>dashlint 0.0.0 · a clean result means nothing dashlint can see is broken, not that every number is right</sub>
+<sub>dashlint 0.1.0 · a clean result means nothing dashlint can see is broken, not that every number is right</sub>
